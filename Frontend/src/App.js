@@ -17,6 +17,8 @@ import NFTListing from './Components/NFTListing/NFTListing.js'
 
 import SingleNFT from './Components/SingleNFT/SingleNFTPage.js'
 
+import DataUpload from './Components/DataUpload/DataUpload.js'
+
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 
 const router = createBrowserRouter([
@@ -37,6 +39,10 @@ const router = createBrowserRouter([
   {
     path: "single",
     element: <SingleNFT />
+  },
+  {
+    path: "data",
+    element: <DataUpload />
   },
 ]);
 

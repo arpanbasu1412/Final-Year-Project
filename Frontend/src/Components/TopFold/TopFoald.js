@@ -1,8 +1,14 @@
 import React from 'react'
 import "./topFoald.css"
 import Button from '../../common/Button/Button'
+import { useNavigate } from 'react-router-dom'
 
 const TopFoald = () => {
+
+  const exploreNFT = useNavigate();
+
+  const create = useNavigate();
+
   return (
     <div className='topfold absolute-center' >
       <div className='tf-left'>
@@ -13,8 +19,8 @@ const TopFoald = () => {
           Please make sure that you are buying and sellinf the most trending NFTs out there. Welcome to my channel Developer's Sayak
         </div>
         <div className='tf-left-btns'>
-          <Button btnType='PRIMARY' btnText='EXPLORE' />
-          <Button btnType='SECONDARY' btnText='CREATE' customClass='tf-left-secondary-btns' />
+          <Button btnType='PRIMARY' btnText='EXPLORE' btnOnClick={() => exploreNFT("/listing")} />
+          <Button btnType='SECONDARY' btnText='CREATE' btnOnClick={() => create("/data")} customClass='tf-left-secondary-btns' />
         </div>
         <div className='tf-left-infoStats'>
           <div className='tf-is-infoItem absolute-center'>

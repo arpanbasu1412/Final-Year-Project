@@ -4,6 +4,7 @@ import Slider from 'react-slick'
 import TRENDING_NFTS from "../../data/trendingNFTs";
 import TrendingCards from "./TrendingCards/TrendingCards";
 import Button from '../../common/Button/Button';
+import { useNavigate } from 'react-router-dom';
 
 const settings = {
   slidesToShow: 3,
@@ -14,6 +15,9 @@ const settings = {
 };
 
 const TrendingNFTS = () => {
+
+  const explore = useNavigate();
+
   return (
     <div className='trending-nfts'>
       <div className='tn-title absolute-center'>
@@ -29,7 +33,7 @@ const TrendingNFTS = () => {
         )}
       </Slider>
       <div className='tn-btn absolute-center'>
-        <Button btnText='SEE MORE' type='Secondary' customClass='seemore-btn'></Button>
+        <Button btnText='SEE MORE' type='Secondary' btnOnClick={() => explore("/listing")} customClass='seemore-btn'></Button>
       </div>
     </div>
   )
