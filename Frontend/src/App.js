@@ -13,6 +13,33 @@ import InfoSection from './Components/InfoSection/InfoSection.js'
 
 import Footer from './Components/Footer/Footer.js'
 
+import NFTListing from './Components/NFTListing/NFTListing.js'
+
+import SingleNFT from './Components/SingleNFT/SingleNFTPage.js'
+
+import {createBrowserRouter, RouterProvider} from 'react-router-dom'
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: (
+      <div className='max-width'>
+        <TopFoald />
+        <BrandsIntegration />
+        <TrendingNFTs />
+      </div>
+    ),
+  },
+  {
+    path: "listing",
+    element: <NFTListing />
+  },
+  {
+    path: "single",
+    element: <SingleNFT />
+  },
+]);
+
 
 const App = () => {
 
@@ -20,15 +47,13 @@ const App = () => {
   // const query = ``
 
   return (
-    <div className='max-width'>
+    <div>
       <Header />
-      <TopFoald />
-      <BrandsIntegration />
-      <TrendingNFTs />
+      <RouterProvider router={router} />
       <InfoSection />
       <Footer />
     </div>
-  )
-}
+  );
+};
 
 export default App
