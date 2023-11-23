@@ -1,0 +1,30 @@
+/* NFTListing.css */
+
+.nft-listing {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .nft-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+  }
+  
+  .nft-card {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .nft-card img {
+    width: 100%;
+    height: auto;
+    max-height: 150px;
+    object-fit: cover;
+  }
+
+.template{
+    padding-bottom: 20px;
+    padding-top: 20px;
+}
