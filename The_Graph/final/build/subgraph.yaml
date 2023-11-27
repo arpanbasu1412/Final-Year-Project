@@ -1,0 +1,43 @@
+specVersion: 0.0.5
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum
+    name: NFT_Marketplace
+    network: goerli
+    source:
+      address: "0x1bef89eA54C5B0d4C176062b13528CeE55420F5C"
+      abi: NFT_Marketplace
+      startBlock: 10115403
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - ApprovalForAll
+        - BatchMetadataUpdate
+        - Initialized
+        - MetadataUpdate
+        - Transfer
+        - idMarketItemCreated
+      abis:
+        - name: NFT_Marketplace
+          file: NFT_Marketplace\abis\NFT_Marketplace.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: BatchMetadataUpdate(uint256,uint256)
+          handler: handleBatchMetadataUpdate
+        - event: Initialized(uint64)
+          handler: handleInitialized
+        - event: MetadataUpdate(uint256)
+          handler: handleMetadataUpdate
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+        - event: idMarketItemCreated(indexed uint256,address,address,indexed uint256,indexed
+            bool,string)
+          handler: handleidMarketItemCreated
+      file: NFT_Marketplace\NFT_Marketplace.wasm

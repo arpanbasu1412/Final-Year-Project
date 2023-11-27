@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ethers } from 'ethers';
 
-const DataUpload = () => {
+const DataUpload = (props) => {
   const [file, setFile] = useState(null);
   // const[fileName, setFileName] = useState("No image selected");
   const handleSubmit = async (e) => {
@@ -24,8 +24,8 @@ const DataUpload = () => {
             "Content-Type": "multipart/form-data",
           },
         });
-        // const ImgHash = `https://gateway.pinata.cloud/ipfs/${resFile.data.IpfsHash}`;
-        // contract.addFile(account,ImgHash);
+        const ImgHash = `https://gateway.pinata.cloud/ipfs/${resFile.data.IpfsHash}`;
+        props.contract.createToken(ImgHash, e.target[1].value);
         alert("Successfully Image Uploaded");
         // setFileName("No image selected");
         setFile(null);
@@ -51,10 +51,12 @@ const DataUpload = () => {
         <header>NFT Creation</header>
         <form action="#" className="form" onSubmit={handleSubmit}>
           <div className="input-box">
-            <label>Account Address :</label>
+            <label>Account Address : </label>
+            <label>{props.accountAddress}</label>
           </div>
           <div className="input-box">
-            <label>Account Balance :</label>
+            <label>Account Balance : </label>
+            <label>{props.accountBalance}</label>
           </div>
           <div className="column">
             <div className="input-box">

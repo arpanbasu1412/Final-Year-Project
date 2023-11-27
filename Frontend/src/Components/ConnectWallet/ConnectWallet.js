@@ -3,11 +3,7 @@ import Button from '../../common/Button/Button';
 import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 
-const ConnectWallet = () => {
-  const [haveMetamask, sethaveMetamask] = useState(true);
-  const [accountAddress, setAccountAddress] = useState('');
-  const [accountBalance, setAccountBalance] = useState('');
-  const [isConnected, setIsConnected] = useState(false);
+const ConnectWallet = (props) => {
 
   window.ethereum.on("chainCchanged", () => {
     window.location.reload();
@@ -23,9 +19,9 @@ const ConnectWallet = () => {
   useEffect(() => {
     const checkMetamaskAvailability = async () => {
       if (!ethereum) {
-        sethaveMetamask(false);
+        props.sethaveMetamask(false);
       }
-      sethaveMetamask(true);
+      props.sethaveMetamask(true);
     };
     checkMetamaskAvailability();
   }, []);
@@ -33,24 +29,24 @@ const ConnectWallet = () => {
   const connectWallet = async () => {
     try {
       if (!ethereum) {
-        sethaveMetamask(false);
+        props.sethaveMetamask(false);
       }
       const accounts = await ethereum.request({
         method: 'eth_requestAccounts',
       });
       let balance = await provider.getBalance(accounts[0]);
       let bal = ethers.utils.formatEther(balance);
-      setAccountAddress(accounts[0]);
-      setAccountBalance(bal);
-      setIsConnected(true);
-      console.log("haveMetamask:", haveMetamask,", accountAddress:", accountAddress, ", accountBalance:", accountBalance, ", isConnected:", isConnected);
+      props.setProvider(provider);
+      props.setAccountAddress(accounts[0]);
+      props.setAccountBalance(bal);
+      props.setIsConnected(true);
     } catch (error) {
-      setIsConnected(false);
+      props.setIsConnected(false);
     }
   };
   return (
     <div>
-        <Button btnType='SECONDARY' btnOnClick={connectWallet} btnText={`${accountAddress !== '' ? 'Connected' : 'Connect Metamask'}`} className='mm-btn' />
+        <Button btnType='SECONDARY' btnOnClick={connectWallet} btnText={`${props.accountAddress !== '' ? 'Metamask Connected' : 'Connect Metamask'}`} className='mm-btn' />
       </div>
   )
 }

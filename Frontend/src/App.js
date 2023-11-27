@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import "./App.css";
 
 import TopFoald from './Components/TopFold/TopFoald.js'
@@ -21,40 +21,67 @@ import DataUpload from './Components/DataUpload/DataUpload.js'
 
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: (
-      <div className='max-width'>
-        <TopFoald />
-        <BrandsIntegration />
-        <TrendingNFTs />
-      </div>
-    ),
-  },
-  {
-    path: "listing",
-    element: <NFTListing />
-  },
-  {
-    path: "single",
-    element: <SingleNFT />
-  },
-  {
-    path: "data",
-    element: <DataUpload />
-  },
-]);
+import NFT_Marketplace from '../src/artifacts/contracts/NFT_Marketplace.sol/NFT_Marketplace.json';
 
+import { ethers } from 'ethers';
 
 const App = () => {
 
-  // const QueryURL = "https://api.studio.thegraph.com/query/51943/nft-marketplace/0.1";
-  // const query = ``
+  const [haveMetamask, sethaveMetamask] = useState(true);
+  const [accountAddress, setAccountAddress] = useState('');
+  const [accountBalance, setAccountBalance] = useState('');
+  const [isConnected, setIsConnected] = useState(false);
+  const [contract, setContract] = useState(null);
+  const [provider, setProvider] = useState(null);
+
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: (
+        <div className='max-width'>
+          <TopFoald />
+          <BrandsIntegration />
+          <TrendingNFTs />
+        </div>
+      ),
+    },
+    {
+      path: "listing",
+      element: <NFTListing />
+    },
+    {
+      path: "single",
+      element: <SingleNFT />
+    },
+    {
+      path: "data",
+      element: <DataUpload accountAddress={accountAddress} accountBalance={accountBalance} contract={contract} />
+    },
+  ]);
+
+  useEffect(() => {
+
+    const providers = async() => {
+      if(provider){
+        const signer = provider.getSigner();
+        let contractAddress = "0x1bef89eA54C5B0d4C176062b13528CeE55420F5C";
+        const contracts = new ethers.Contract(
+          contractAddress, NFT_Marketplace.abi, signer
+        )
+        setContract(contracts);
+      }else{
+        console.error("Connect Metamask");
+      }
+    }
+
+    providers();
+    
+    console.log("haveMetamask:", haveMetamask,", accountAddress:", accountAddress, ", accountBalance:", accountBalance, ", isConnected:", isConnected, "Provider:", provider, "Contract:", contract);
+  }, [haveMetamask, accountAddress, accountBalance, isConnected, provider]);
 
   return (
     <div>
-      <Header />
+      <Header sethaveMetamask={sethaveMetamask} setAccountAddress={setAccountAddress} setAccountBalance={setAccountBalance} setIsConnected={setIsConnected} setProvider={setProvider} accountAddress={accountAddress} />
       <RouterProvider router={router} />
       <InfoSection />
       <Footer />

@@ -40,7 +40,8 @@ contract NFT_Marketplace is ERC721URIStorageUpgradeable {
         address seller,
         address owner,
         uint256 indexed price,
-        bool indexed sold
+        bool indexed sold,
+        string link
     );
 
     modifier onlyOwner() {
@@ -85,14 +86,14 @@ contract NFT_Marketplace is ERC721URIStorageUpgradeable {
         _mint(msg.sender, newTokenId);
         _setTokenURI(newTokenId, tokenURI);
 
-        createMarketItem(newTokenId, price);
+        createMarketItem(newTokenId, price, tokenURI);
 
         return newTokenId;
     }
 
     //Create all the market items
 
-    function createMarketItem(uint256 tokenId, uint256 price) private {
+    function createMarketItem(uint256 tokenId, uint256 price, string memory tokenURI) private {
         require(price > 0, 'Price must be at least 1');
         require(msg.value == listingPrice, 'Price must be equal to listing price');
 
@@ -108,7 +109,7 @@ contract NFT_Marketplace is ERC721URIStorageUpgradeable {
 
         _transfer(msg.sender, address(this), tokenId);
 
-        emit idMarketItemCreated(tokenId, msg.sender, address(this), price, false);
+        emit idMarketItemCreated(tokenId, msg.sender, address(this), price, false, tokenURI);
     }
 
     //Function For Resale Token. To resale the previously bought NFT
