@@ -8,6 +8,7 @@ const SingleNFTPage = (props) => {
   const {NFT, contract, accountBalance} = props;
 
   const backToHome = useNavigate();
+  const listingPage = useNavigate();
 
   let owners;
   useEffect(() => {
@@ -55,6 +56,7 @@ const SingleNFTPage = (props) => {
       </div>
       <div className="absolute-center">
         <Button btnType='SECONDARY' btnText='HOME' btnOnClick={() => backToHome("/")} />
+        <Button btnType='SECONDARY' btnText='Listing Page' btnOnClick={() => listingPage("/listing")} />
       </div>
     </div>
   )

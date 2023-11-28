@@ -125,3 +125,7 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+.btn{
+  margin: 15px;
+}

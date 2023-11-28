@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 const DataUpload = (props) => {
   const [file, setFile] = useState(null);
   const backToHome = useNavigate();
+  const listingPage = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     if(file){
@@ -72,6 +73,9 @@ const DataUpload = (props) => {
         </form>
       </section>
       <Button btnType='SECONDARY' btnText='HOME' btnOnClick={() => backToHome("/")} />
+      <div className='btn'>
+        <Button btnType='SECONDARY' btnText='Listing Page' btnOnClick={() => listingPage("/listing")} />
+      </div>
     </div>
   )
 }
