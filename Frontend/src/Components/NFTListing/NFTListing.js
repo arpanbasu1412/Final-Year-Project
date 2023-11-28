@@ -38,10 +38,12 @@ const NFTListing = () => {
       <div className="nft-grid">
         {NFTs !== null && NFTs.length > 0 && NFTs.map((nft) => {
           console.log(nft.link);
-          <div key={nft.id} className="nft-card">
-            <img src={nft.link} alt={nft.name} />
-            <p>{nft.tokenId}</p>
-          </div>
+          return (
+            <div key={nft.id} className="nft-card">
+              <img src={nft.link} alt={nft.name} />
+              <p>{nft.tokenId}</p>
+            </div>
+          );
         })}
       </div>
     </div>
