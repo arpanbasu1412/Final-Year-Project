@@ -1,8 +1,7 @@
 import React from 'react'
 import './DataUpload.css'
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
-import { ethers } from 'ethers';
 
 const DataUpload = (props) => {
   const [file, setFile] = useState(null);

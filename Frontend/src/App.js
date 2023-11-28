@@ -25,6 +25,8 @@ import NFT_Marketplace from '../src/artifacts/contracts/NFT_Marketplace.sol/NFT_
 
 import { ethers } from 'ethers';
 
+import {createClient} from "urql";
+
 const App = () => {
 
   const [haveMetamask, sethaveMetamask] = useState(true);
@@ -33,6 +35,23 @@ const App = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [contract, setContract] = useState(null);
   const [provider, setProvider] = useState(null);
+  const [NFTs, setNFTs] = useState([]);
+
+  const queryURL = "https://api.studio.thegraph.com/query/51943/final/0.2";
+  const query = `{
+    idMarketItemCreateds {
+      link
+      owner
+      price
+      seller
+      sold
+      tokenId
+    }
+  }`
+
+  const client = createClient({
+    url: queryURL
+  })
 
   const router = createBrowserRouter([
     {
@@ -47,7 +66,7 @@ const App = () => {
     },
     {
       path: "listing",
-      element: <NFTListing />
+      element: <NFTListing NFTs={NFTs} />
     },
     {
       path: "single",
@@ -74,9 +93,16 @@ const App = () => {
       }
     }
 
+    const getData = async () => {
+      const {data} = await client.query(query).toPromise();
+      setNFTs(data.idMarketItemCreateds);
+    }
+
     providers();
+
+    getData();
     
-    console.log("haveMetamask:", haveMetamask,", accountAddress:", accountAddress, ", accountBalance:", accountBalance, ", isConnected:", isConnected, "Provider:", provider, "Contract:", contract);
+    // console.log("haveMetamask:", haveMetamask,", accountAddress:", accountAddress, ", accountBalance:", accountBalance, ", isConnected:", isConnected, "Provider:", provider, "Contract:", contract);
   }, [haveMetamask, accountAddress, accountBalance, isConnected, provider]);
 
   return (

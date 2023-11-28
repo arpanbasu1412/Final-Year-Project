@@ -1,9 +1,12 @@
 import React from 'react';
 import "./SingleNFTPage.css";
 
-const SingleNFTPage = () => {
+const SingleNFTPage = (props) => {
+
+  const {NFT} = props;
+
   return (
-    <div>SingleNFTPage</div>
+    <div>{NFT}</div>
   )
 }
 
