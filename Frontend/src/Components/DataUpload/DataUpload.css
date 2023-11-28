@@ -120,3 +120,8 @@ body {
     row-gap: 15px;
   }
 }
+
+.creation{
+  display: flex;
+  flex-direction: column;
+}

@@ -3,6 +3,8 @@
 .nft-listing {
   max-width: fit-content;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
 }
   
 .nft-grid {
@@ -41,4 +43,8 @@
 
 .nft-single{
   cursor: pointer;
+}
+
+.backBtn{
+  margin-top: 20px;
 }

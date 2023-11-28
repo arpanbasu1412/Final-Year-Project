@@ -2,10 +2,12 @@ import React from 'react'
 import './DataUpload.css'
 import { useState } from 'react';
 import axios from 'axios';
+import Button from '../../common/Button/Button';
+import { useNavigate } from 'react-router-dom';
 
 const DataUpload = (props) => {
   const [file, setFile] = useState(null);
-  // const[fileName, setFileName] = useState("No image selected");
+  const backToHome = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     if(file){
@@ -26,7 +28,6 @@ const DataUpload = (props) => {
         const ImgHash = `https://gateway.pinata.cloud/ipfs/${resFile.data.IpfsHash}`;
         props.contract.createToken(ImgHash, e.target[1].value);
         alert("Successfully Image Uploaded");
-        // setFileName("No image selected");
         setFile(null);
       } catch (error) {
         alert("Unable to upload image to Pinata");
@@ -34,18 +35,16 @@ const DataUpload = (props) => {
     }
   };
   const retrieveFile = (e) => {
-    const data = e.target.files[0]; //files array of files object
-    // console.log(data);
+    const data = e.target.files[0];
     const reader = new window.FileReader();
     reader.readAsArrayBuffer(data);
     reader.onloadend = () => {
       setFile(e.target.files[0]);
     };
-    // setFileName(e.target.files[0].name);
     e.preventDefault();
   };
   return (
-    <div className='absolute-center'>
+    <div className='creation absolute-center'>
         <section className="container">
         <header>NFT Creation</header>
         <form action="#" className="form" onSubmit={handleSubmit}>
@@ -72,6 +71,7 @@ const DataUpload = (props) => {
           <button>Submit</button>
         </form>
       </section>
+      <Button btnType='SECONDARY' btnText='HOME' btnOnClick={() => backToHome("/")} />
     </div>
   )
 }

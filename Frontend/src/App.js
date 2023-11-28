@@ -36,6 +36,7 @@ const App = () => {
   const [contract, setContract] = useState(null);
   const [provider, setProvider] = useState(null);
   const [NFTs, setNFTs] = useState([]);
+  const [NFT, setNFT] = useState(null);
 
   const queryURL = "https://api.studio.thegraph.com/query/51943/final/0.2";
   const query = `{
@@ -66,11 +67,11 @@ const App = () => {
     },
     {
       path: "listing",
-      element: <NFTListing NFTs={NFTs} />
+      element: <NFTListing NFTs={NFTs} setNFT={setNFT} />
     },
     {
       path: "single",
-      element: <SingleNFT />
+      element: <SingleNFT NFT={NFT} contract={contract} accountBalance={accountBalance} />
     },
     {
       path: "data",
@@ -101,9 +102,11 @@ const App = () => {
     providers();
 
     getData();
+
+    // console.log("NFT Id: ", NFT);
     
     // console.log("haveMetamask:", haveMetamask,", accountAddress:", accountAddress, ", accountBalance:", accountBalance, ", isConnected:", isConnected, "Provider:", provider, "Contract:", contract);
-  }, [haveMetamask, accountAddress, accountBalance, isConnected, provider]);
+  }, [haveMetamask, accountAddress, accountBalance, isConnected, provider, NFT]);
 
   return (
     <div>
