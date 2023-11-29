@@ -3,25 +3,19 @@ pragma solidity >=0.5.0 <0.9.0;
 
 import "hardhat/console.sol";
 
-import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-contract NFT_Marketplace is ERC721URIStorageUpgradeable {
-    using CountersUpgradeable for CountersUpgradeable.Counter;
+contract NFT_Marketplace is ERC721URIStorage {
+    using Counters for Counters.Counter;
 
-    CountersUpgradeable.Counter private _tokenIds;
-    CountersUpgradeable.Counter private _itemsSold;
+    Counters.Counter private _tokenIds;
+    Counters.Counter private _itemsSold;
 
-    uint256 listingPrice;
+    uint256 listingPrice = 0.0015 ether;
 
     address payable owner;
-
-    bool public initialized;
 
     mapping(uint256 => MarketItem) private idMarketItem;
 
@@ -37,10 +31,10 @@ contract NFT_Marketplace is ERC721URIStorageUpgradeable {
 
     event idMarketItemCreated(
         uint256 indexed tokenId,
-        address seller,
+        address indexed seller,
         address owner,
         uint256 indexed price,
-        bool indexed sold,
+        bool sold,
         string link
     );
 
@@ -49,11 +43,8 @@ contract NFT_Marketplace is ERC721URIStorageUpgradeable {
         _;
     }
 
-    function initialize(uint256 _listingPrice) public initializer {
-        __ERC721_init("NFT Marketplace", "NFT");
-        __ERC721URIStorage_init();
-        listingPrice = _listingPrice;
-        owner = payable(msg.sender);
+    constructor() ERC721("NFT Metaverse Token", "MYNFT") {
+        owner == payable(msg.sender);
     }
 
     //To update the listing price for NFT
@@ -136,6 +127,7 @@ contract NFT_Marketplace is ERC721URIStorageUpgradeable {
 
         idMarketItem[tokenId].owner = payable(msg.sender);
         idMarketItem[tokenId].sold = true;
+        idMarketItem[tokenId].owner = payable(address(0));
 
         _itemsSold.increment();
 
@@ -143,17 +135,7 @@ contract NFT_Marketplace is ERC721URIStorageUpgradeable {
 
         _transfer(address(this), msg.sender, tokenId);
 
-        payable(owner).transfer(listingPrice);
-
-        uint256 remain = msg.value - price;
-
-        uint256 actual = msg.value - remain;
-
-        if(remain > 0){
-            payable(msg.sender).transfer(remain);
-        }
-
-        payable(idMarketItem[tokenId].seller).transfer(actual);
+        payable(idMarketItem[tokenId].seller).transfer((msg.value - listingPrice));
     }
 
     //Get the unsold NFT Data

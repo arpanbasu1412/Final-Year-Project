@@ -2,10 +2,11 @@ import React, { useEffect } from 'react';
 import "./SingleNFTPage.css";
 import Button from '../../common/Button/Button';
 import { useNavigate } from 'react-router-dom';
+import { ethers } from 'ethers';
 
 const SingleNFTPage = (props) => {
 
-  const {NFT, contract, accountBalance} = props;
+  const {NFT, contract, accountBalance, accountAddress} = props;
 
   const backToHome = useNavigate();
   const listingPage = useNavigate();
@@ -25,10 +26,14 @@ const SingleNFTPage = (props) => {
 
 
 
-  const buyingNFT = () => {
+  const buyingNFT = async () => {
+    const valueToSend = ethers.utils.parseEther(`${NFT.price}`)
     if(accountBalance > NFT.price){
-      console.log("Transaction send");
-      contract.createMarketSale(NFT.tokenId);
+      const result = await contract.createMarketSale(NFT.tokenId, {
+        value: valueToSend,
+        gasLimit: 300000000,
+      });
+      console.log(result);
     }else{
       alert("Not Enough Money")
     }

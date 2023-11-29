@@ -71,7 +71,7 @@ const App = () => {
     },
     {
       path: "single",
-      element: <SingleNFT NFT={NFT} contract={contract} accountBalance={accountBalance} />
+      element: <SingleNFT NFT={NFT} contract={contract} accountBalance={accountBalance} accountAddress={accountAddress} />
     },
     {
       path: "data",
@@ -84,7 +84,7 @@ const App = () => {
     const providers = async() => {
       if(provider){
         const signer = provider.getSigner();
-        let contractAddress = "0x1bef89eA54C5B0d4C176062b13528CeE55420F5C";
+        let contractAddress = "0x613C9501Fb93c4a882358a73d189E448Da35048d";
         const contracts = new ethers.Contract(
           contractAddress, NFT_Marketplace.abi, signer
         )
