@@ -13,7 +13,12 @@ const SingleNFTPage = (props) => {
   let owners;
   useEffect(() => {
     const seeAllOwners = async () => {
-      owners = await contract.getAllOwners(NFT.tokenId);
+      if(contract){
+        owners = await contract.getAllOwners(NFT.tokenId);
+      }else{
+        alert("Connect metamask first");
+        backToHome("/");
+      }
     }
     seeAllOwners();
   })
@@ -29,19 +34,24 @@ const SingleNFTPage = (props) => {
     }
   }
 
+  const nftNotSelected = () => {
+    alert("First select a NFT.");
+    listingPage("/listing");
+  }
+
 
   return (
     <div>
       <div className="container">
         <div className="right-box">
           <div className="main-image-box">
-            <img src={`${NFT.link}`} id="mainImage" className="main-image" />
+            <img src={NFT !== null ? `${NFT.link}` : nftNotSelected()} id="mainImage" className="main-image" />
           </div>
         </div>
         <div className="details-box">
-          <h3>Price : {NFT.price} eth</h3>
+          <h3>Price : {NFT !== null ? `${NFT.price}` : nftNotSelected()} eth</h3>
           <br />
-          <h3>Owner : {NFT.seller}</h3>
+          <h3>Owner : {NFT !== null ? `${NFT.seller}` : nftNotSelected()}</h3>
           <br />
           <h3>Previous Owners : {owners > 0 ? owners.map((owner) => {
             return(
