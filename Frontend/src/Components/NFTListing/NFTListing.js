@@ -11,6 +11,7 @@ const NFTListing = (props) => {
 
   const backToHome = useNavigate();
 
+  
   return (
     <div className="nft-listing absolute-center">
       <h2 className="heading">NFT Listing</h2>
