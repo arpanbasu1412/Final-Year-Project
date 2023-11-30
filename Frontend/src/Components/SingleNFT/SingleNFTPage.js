@@ -27,11 +27,13 @@ const SingleNFTPage = (props) => {
 
 
   const buyingNFT = async () => {
-    const valueToSend = ethers.utils.parseEther(`${NFT.price}`)
+    const cost = Number(NFT.price) + 0.0015;
+    const valueToSend = ethers.utils.parseEther(`${cost}`)
+    console.log(cost);
     if(accountBalance > NFT.price){
       const result = await contract.createMarketSale(NFT.tokenId, {
         value: valueToSend,
-        gasLimit: 300000000,
+        gasLimit: 3000000,
       });
       console.log(result);
     }else{

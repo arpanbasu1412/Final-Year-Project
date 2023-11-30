@@ -4,6 +4,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import Button from '../../common/Button/Button';
 import { useNavigate } from 'react-router-dom';
+import { ethers } from 'ethers';
 
 const DataUpload = (props) => {
   const [file, setFile] = useState(null);
@@ -27,11 +28,14 @@ const DataUpload = (props) => {
           },
         });
         const ImgHash = `https://gateway.pinata.cloud/ipfs/${resFile.data.IpfsHash}`;
-        props.contract.createToken(ImgHash, e.target[1].value);
+        props.contract.createToken(ImgHash, e.target[1].value, {
+          value: ethers.utils.parseEther("0.0015"),
+          gasLimit: 3000000,
+        });
         alert("Successfully Image Uploaded");
         setFile(null);
       } catch (error) {
-        alert("Unable to upload image to Pinata");
+        alert(error);
       }
     }
   };
