@@ -38,7 +38,7 @@ const App = () => {
   const [NFTs, setNFTs] = useState([]);
   const [NFT, setNFT] = useState(null);
 
-  const queryURL = "https://api.studio.thegraph.com/query/51943/final-graph/0.1";
+  const queryURL = "https://api.studio.thegraph.com/query/51943/marketplace/0.2";
   const query = `{
     idMarketItemCreateds {
       link
@@ -84,7 +84,7 @@ const App = () => {
     const providers = async() => {
       if(provider){
         const signer = provider.getSigner();
-        let contractAddress = "0x613C9501Fb93c4a882358a73d189E448Da35048d";
+        let contractAddress = "0xc39f703065A63E45a2Df854BA650bc85ec886911";
         const contracts = new ethers.Contract(
           contractAddress, NFT_Marketplace.abi, signer
         )

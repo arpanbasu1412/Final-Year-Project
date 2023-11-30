@@ -17,7 +17,7 @@ contract NFT_Marketplace is ERC721URIStorage {
 
     address payable owner;
 
-    mapping(uint256 => MarketItem) private idMarketItem;
+    mapping(uint256 => MarketItem) public idMarketItem;
 
     mapping(uint256 => address[]) private owners;
 
@@ -27,6 +27,7 @@ contract NFT_Marketplace is ERC721URIStorage {
         address payable owner;
         uint256 price;
         bool sold;
+        string link;
     }
 
     event idMarketItemCreated(
@@ -93,7 +94,8 @@ contract NFT_Marketplace is ERC721URIStorage {
             payable(msg.sender),
             payable(address(this)),
             price,
-            false
+            false,
+            tokenURI
         );
 
         owners[tokenId].push(msg.sender);
@@ -127,7 +129,7 @@ contract NFT_Marketplace is ERC721URIStorage {
 
         idMarketItem[tokenId].owner = payable(msg.sender);
         idMarketItem[tokenId].sold = true;
-        idMarketItem[tokenId].owner = payable(address(0));
+        idMarketItem[tokenId].seller = payable(msg.sender);
 
         _itemsSold.increment();
 
