@@ -38,7 +38,7 @@ const App = () => {
   const [NFTs, setNFTs] = useState([]);
   const [NFT, setNFT] = useState(null);
 
-  const queryURL = "https://api.studio.thegraph.com/query/51943/marketplace/0.2";
+  const queryURL = "https://api.studio.thegraph.com/query/51943/cse/0.1";
   const query = `{
     idMarketItemCreateds {
       link
@@ -67,7 +67,7 @@ const App = () => {
     },
     {
       path: "listing",
-      element: <NFTListing NFTs={NFTs} setNFT={setNFT} />
+      element: <NFTListing NFTs={NFTs} setNFT={setNFT} contract={contract} />
     },
     {
       path: "single",
