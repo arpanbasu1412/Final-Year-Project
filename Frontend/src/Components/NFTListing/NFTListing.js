@@ -13,13 +13,16 @@ const NFTListing = (props) => {
   const backToHome = useNavigate();
 
   const [NFTs, setNFTs] = useState([[]]);
-
+  
+  const [personalNFTs, setPersonalNFTs] = useState([[]]);
 
   useEffect(() => {
     const getData = async () => {
       if(contract){
         const nft = await contract.fetchMarketItem();
         setNFTs(nft);
+        const personalNFT = await contract.fetchMyNFT();
+        setPersonalNFTs(personalNFT);
       }else{
         backToHome("/");
       }
@@ -33,6 +36,25 @@ const NFTListing = (props) => {
   return (
     <div className="nft-listing absolute-center">
       <h2 className="heading">NFT Listing</h2>
+      <h2 className="heading">Your NFTs</h2>
+      <div className="nft-grid">
+      {personalNFTs.length > 0 ? personalNFTs.map((nft) => {
+        if(nft[4]){
+          return(
+            <div key={count} className="nft-card">
+              <img className="nft-single" src={nft[5]} alt={nft[2]} />
+              <p className='token-number'>NFT Number: {count++}</p>
+              <Button className="buying-price" btnType='PRIMARY' btnText='Resell' btnOnClick={() => {
+                props.setNFT(nft);
+                singleNFT("/single");
+              }} />
+            </div>
+          )
+        }
+      }): <h1 className="absolute-center">You don't have any NFT, Buy now</h1>
+      }
+      </div>
+      <h2 className="heading">Unsold NFTs</h2>
       <div className="nft-grid">
       {NFTs.length > 0 && NFTs.map((nft) => {
         if(!nft[4]){
@@ -54,7 +76,6 @@ const NFTListing = (props) => {
         <Button btnType='SECONDARY' btnText='HOME' btnOnClick={() => backToHome("/")} />
       </div>
     </div>
-    // <h1>Hello</h1>
   );
 };
 

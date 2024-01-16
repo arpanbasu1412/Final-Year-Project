@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import "./SingleNFTPage.css";
+// import "./SingleNFTPage.css";
 import Button from '../../common/Button/Button';
 import { useNavigate } from 'react-router-dom';
 import { ethers } from 'ethers';
@@ -30,24 +30,8 @@ const SingleNFTPage = (props) => {
     const cost = Number(NFT.price) + 0.0015;
     const valueToSend = ethers.utils.parseEther(`${cost}`)
     console.log(cost);
-    if(accountBalance > valueToSend){
+    if(accountBalance > NFT.price){
       const result = await contract.createMarketSale(NFT.tokenId, {
-        value: valueToSend,
-        gasLimit: 3000000,
-      });
-      console.log(result);
-    }else{
-      alert("Not Enough Money")
-    }
-  }
-  const resellNFT = async (e) => {
-    console.log(e.target[1].value);
-    e.preventDefault();
-    const cost = 0.0015;
-    const valueToSend = ethers.utils.parseEther(`${cost}`)
-    console.log(cost);
-    if(accountBalance > valueToSend){
-      const result = await contract.reSellToken(NFT.tokenId, e.target[1].value, {
         value: valueToSend,
         gasLimit: 3000000,
       });
@@ -84,16 +68,7 @@ const SingleNFTPage = (props) => {
               </div>
             )
           }) : `No owners`}</h3>
-          {!NFT[4] ? <button onClick={buyingNFT}>Buy</button> : 
-          <form action="#" onSubmit={resellNFT}>
-            <br />
-            <div>
-              <h3>Enter the price :</h3>
-              <br />
-              <input className="price" type="text" placeholder="e.i. 1" required />
-            </div>
-              <button>Resell</button>
-            </form>}
+          <button onClick={buyingNFT}>Buy</button>
         </div>
       </div>
       <div className="absolute-center">

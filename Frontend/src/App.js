@@ -15,6 +15,8 @@ import Footer from './Components/Footer/Footer.js'
 
 import NFTListing from './Components/NFTListing/NFTListing.js'
 
+import Resell from './Components/NFTListing/Resell.js'
+
 import SingleNFT from './Components/SingleNFT/SingleNFTPage.js'
 
 import DataUpload from './Components/DataUpload/DataUpload.js'
@@ -77,6 +79,10 @@ const App = () => {
       path: "data",
       element: <DataUpload accountAddress={accountAddress} accountBalance={accountBalance} contract={contract} />
     },
+    {
+      path: "resell",
+      element: <Resell NFT={NFT} contract={contract} accountBalance={accountBalance} accountAddress={accountAddress}/>
+    },
   ]);
 
   useEffect(() => {
@@ -106,7 +112,7 @@ const App = () => {
     // console.log("NFT Id: ", NFT);
     
     // console.log("haveMetamask:", haveMetamask,", accountAddress:", accountAddress, ", accountBalance:", accountBalance, ", isConnected:", isConnected, "Provider:", provider, "Contract:", contract);
-  }, [haveMetamask, accountAddress, accountBalance, isConnected, provider, NFT]);
+  }, [haveMetamask, accountAddress, accountBalance, isConnected, provider]);
 
   return (
     <div>

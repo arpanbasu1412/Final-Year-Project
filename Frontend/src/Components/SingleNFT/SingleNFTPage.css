@@ -38,3 +38,8 @@ button{
 button:hover{
   background-color: darkgreen;
 }
+
+.price{
+  font-size: 20px;
+  padding: 10px;
+}

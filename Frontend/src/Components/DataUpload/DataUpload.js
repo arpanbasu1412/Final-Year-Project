@@ -11,6 +11,7 @@ const DataUpload = (props) => {
   const backToHome = useNavigate();
   const listingPage = useNavigate();
   const handleSubmit = async (e) => {
+    // console.log(e.target[1].value);
     e.preventDefault();
     if(file){
       try {
@@ -71,7 +72,7 @@ const DataUpload = (props) => {
           </div>
           <div className="input-box address">
             <label>Enter the price :</label>
-            <input type="text" placeholder="Enter street address" required />
+            <input type="text" placeholder="e.i. 1" required />
           </div>
           <button>Submit</button>
         </form>
