@@ -90,7 +90,7 @@ const App = () => {
     const providers = async() => {
       if(provider){
         const signer = provider.getSigner();
-        let contractAddress = "0xc39f703065A63E45a2Df854BA650bc85ec886911";
+        let contractAddress = "0xf2f0E62B2F19A30782A1e6a1D666360a551a3B77";
         const contracts = new ethers.Contract(
           contractAddress, NFT_Marketplace.abi, signer
         )

@@ -1,6 +1,7 @@
 require("@nomicfoundation/hardhat-toolbox");
 require("dotenv").config();
 require('@openzeppelin/hardhat-upgrades');
+require("@nomicfoundation/hardhat-ethers");
 
 const ALCHEMY_API_KEY = process.env.API_URL;
 const GOERLI_PRIVATE_KEY = process.env.PRIVATE_KEY;

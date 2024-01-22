@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import "./SingleNFTPage.css";
 import Button from '../../common/Button/Button';
 import { useNavigate } from 'react-router-dom';
@@ -8,21 +8,22 @@ const SingleNFTPage = (props) => {
 
   const {NFT, contract, accountBalance, accountAddress} = props;
 
+  const [owners, setOwners] = useState([]);
+
   const backToHome = useNavigate();
   const listingPage = useNavigate();
 
-  let owners;
   useEffect(() => {
     const seeAllOwners = async () => {
       if(contract){
-        owners = await contract.getAllOwners(NFT.tokenId);
+        setOwners(await contract.getAllOwners(NFT.tokenId));
       }else{
         alert("Connect metamask first");
         backToHome("/");
       }
     }
     seeAllOwners();
-  })
+  },[])
 
 
 
@@ -40,21 +41,22 @@ const SingleNFTPage = (props) => {
       alert("Not Enough Money")
     }
   }
+
   const resellNFT = async (e) => {
-    console.log(e.target[1].value);
+    console.log(typeof(e.target[1].value));
     e.preventDefault();
-    const cost = 0.0015;
-    const valueToSend = ethers.utils.parseEther(`${cost}`)
-    console.log(cost);
-    if(accountBalance > valueToSend){
-      const result = await contract.reSellToken(NFT.tokenId, e.target[1].value, {
-        value: valueToSend,
-        gasLimit: 3000000,
-      });
-      console.log(result);
-    }else{
-      alert("Not Enough Money")
-    }
+    // const cost = 0.0015;
+    // const valueToSend = ethers.utils.parseEther(`${cost}`)
+    // console.log(cost);
+    // if(accountBalance > valueToSend){
+    //   const result = await contract.reSellToken(NFT.tokenId, e.target[1].value, {
+    //     value: valueToSend,
+    //     gasLimit: 3000000,
+    //   });
+    //   console.log(result);
+    // }else{
+    //   alert("Not Enough Money")
+    // }
   }
 
   const nftNotSelected = () => {
@@ -72,13 +74,18 @@ const SingleNFTPage = (props) => {
           </div>
         </div>
         <div className="details-box">
+          <h3>Token Id : {NFT !== null ? `${NFT.tokenId}` : nftNotSelected()}</h3>
+          <br />
           <h3>Price : {NFT !== null ? `${NFT.price}` : nftNotSelected()} eth</h3>
           <br />
-          <h3>Owner : {NFT !== null ? `${NFT.seller}` : nftNotSelected()}</h3>
+          <h3>Current Owner : </h3>
           <br />
-          <h3>Previous Owners : {owners > 0 ? owners.map((owner) => {
+          <h3>{NFT !== null ? `${NFT.seller}` : nftNotSelected()}</h3>
+          <br />
+          <h3>Previous Owners : {owners.length > 0 ? owners.map((owner) => {
             return(
               <div>
+                <br/>
                 <h3>{owner}</h3>
                 <br />
               </div>

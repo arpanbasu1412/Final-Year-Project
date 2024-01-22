@@ -10,7 +10,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
-contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
+contract NFT_Marketplacev2 is Initializable, ERC721URIStorageUpgradeable {
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIds;
@@ -75,7 +75,9 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
         return owners[tokenId];
     }
 
-
+    function getContractOwner() public view returns (address payable){
+        return owner;
+    }
 
     //To create unique ID for every NFT
 
