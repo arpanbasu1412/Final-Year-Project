@@ -21,6 +21,8 @@ import SingleNFT from './Components/SingleNFT/SingleNFTPage.js'
 
 import DataUpload from './Components/DataUpload/DataUpload.js'
 
+import TrendingPage from './Components/TrendingPage/TrendingPage.js';
+
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 
 import NFT_Marketplace from '../src/artifacts/contracts/NFT_Marketplace.sol/NFT_Marketplace.json';
@@ -82,6 +84,10 @@ const App = () => {
     {
       path: "resell",
       element: <Resell NFT={NFT} contract={contract} accountBalance={accountBalance} accountAddress={accountAddress}/>
+    },
+    {
+      path: "trending_page",
+      element: <TrendingPage NFTs={NFTs} setNFT={setNFT} contract={contract} />
     },
   ]);
 

@@ -10,8 +10,8 @@ const settings = {
   slidesToShow: 3,
   slidesToScroll: 1,
   autoPlay: true,
-  speed: 500,
-  arrow: false,
+  speed: 5,
+  arrow: true,
 };
 
 const TrendingNFTS = () => {
@@ -32,11 +32,17 @@ const TrendingNFTS = () => {
         }
         )}
       </Slider>
-      <div className='tn-btn absolute-center'>
-        <Button btnText='SEE MORE' type='Secondary' btnOnClick={() => explore("/listing")} customClass='seemore-btn'></Button>
+      <br />
+      <div className='seemore-btn absolute-center'>
+        <Button btnText='SEE MORE' btnOnClick={() => explore("/trending_page")}></Button>
       </div>
     </div>
   )
 }
 
 export default TrendingNFTS
+
+
+//<div className='tn-btn absolute-center'>
+// <Button btnText='SEE MORE' type='Secondary' btnOnClick={() => explore("/listing")} customClass='seemore-btn'></Button>
+// </div>

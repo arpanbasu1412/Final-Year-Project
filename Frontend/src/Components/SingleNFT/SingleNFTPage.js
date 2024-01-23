@@ -43,20 +43,20 @@ const SingleNFTPage = (props) => {
   }
 
   const resellNFT = async (e) => {
-    console.log(typeof(e.target[1].value));
+    // console.log(typeof(e.target[0].value));
     e.preventDefault();
-    // const cost = 0.0015;
-    // const valueToSend = ethers.utils.parseEther(`${cost}`)
-    // console.log(cost);
-    // if(accountBalance > valueToSend){
-    //   const result = await contract.reSellToken(NFT.tokenId, e.target[1].value, {
-    //     value: valueToSend,
-    //     gasLimit: 3000000,
-    //   });
-    //   console.log(result);
-    // }else{
-    //   alert("Not Enough Money")
-    // }
+    const cost = 0.0015;
+    const valueToSend = ethers.utils.parseEther(`${cost}`)
+    console.log(cost);
+    if(accountBalance > valueToSend){
+      const result = await contract.reSellToken(NFT.tokenId, e.target[0].value, {
+        value: valueToSend,
+        gasLimit: 3000000,
+      });
+      console.log(result);
+    }else{
+      alert("Not Enough Money")
+    }
   }
 
   const nftNotSelected = () => {
