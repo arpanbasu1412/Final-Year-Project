@@ -14,7 +14,7 @@ const INFO_ITEMS = [
     {
         id: 3,
         icon: require('../assets/bookmark.png'),
-        section_title: 'List then for sale',
+        section_title: 'List them for sale',
         description: "Choose between auctions, fixed-price listing, and declining-price listing. You choose how you want to sell your NFTs, and we help you sell them."
     }
 ]
