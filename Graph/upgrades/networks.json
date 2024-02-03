@@ -1,0 +1,8 @@
+{
+  "goerli": {
+    "NFT_Marketplacev2": {
+      "address": "0xe39b564e40f474fa10b80dae6419686f610484ec",
+      "startBlock": 10416205
+    }
+  }
+}
