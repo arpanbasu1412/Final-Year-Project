@@ -22,20 +22,13 @@ const TopFoald = () => {
           <Button btnType='PRIMARY' btnText='EXPLORE' btnOnClick={() => exploreNFT("/listing")} />
           <Button btnType='SECONDARY' btnText='CREATE' btnOnClick={() => create("/data")} customClass='tf-left-secondary-btns' />
         </div>
-        <div className='tf-left-infoStats'>
-          <div className='tf-is-infoItem absolute-center'>
-            <div className='tf-infoItem-count'>200K+</div>
-            <div className='tf-infoItem-lable'>Collections</div>
-          </div>
-          <div className='tf-is-infoItem absolute-center'>
-            <div className='tf-infoItem-count'>10K+</div>
-            <div className='tf-infoItem-lable'>Artist</div>
-          </div>
-          <div className='tf-is-infoItem absolute-center'>
-            <div className='tf-infoItem-count'>423K+</div>
-            <div className='tf-infoItem-lable'>Community</div>
-          </div>
-        </div>
+        
+
+
+
+
+
+
       </div>
       <div className='tf-right'>
         <div className='tf-r-bg-blob'>
@@ -60,3 +53,21 @@ const TopFoald = () => {
 }
 
 export default TopFoald
+
+
+
+
+// <div className='tf-left-infoStats'>
+//           <div className='tf-is-infoItem absolute-center'>
+//             <div className='tf-infoItem-count'>200K+</div>
+//             <div className='tf-infoItem-lable'>Collections</div>
+//           </div>
+//           <div className='tf-is-infoItem absolute-center'>
+//             <div className='tf-infoItem-count'>10K+</div>
+//             <div className='tf-infoItem-lable'>Artist</div>
+//           </div>
+//           <div className='tf-is-infoItem absolute-center'>
+//             <div className='tf-infoItem-count'>423K+</div>
+//             <div className='tf-infoItem-lable'>Community</div>
+//           </div>
+//         </div>

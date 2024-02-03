@@ -31,7 +31,7 @@ const SingleNFTPage = (props) => {
     const cost = Number(NFT.price) + 0.0015;
     const valueToSend = ethers.utils.parseEther(`${cost}`)
     console.log(cost);
-    if(accountBalance > valueToSend){
+    if(accountBalance > cost){
       const result = await contract.createMarketSale(NFT.tokenId, {
         value: valueToSend,
         gasLimit: 3000000,
@@ -74,13 +74,13 @@ const SingleNFTPage = (props) => {
           </div>
         </div>
         <div className="details-box">
-          <h3>Token Id : {NFT !== null ? `${NFT.tokenId}` : nftNotSelected()}</h3>
+          <h3>Token Id : {NFT !== null ? `${NFT.tokenId}` : console.log("First Select an NFT")}</h3>
           <br />
-          <h3>Price : {NFT !== null ? `${NFT.price}` : nftNotSelected()} eth</h3>
+          <h3>Price : {NFT !== null ? `${NFT.price}` : console.log("First Select an NFT")} eth</h3>
           <br />
           <h3>Current Owner : </h3>
           <br />
-          <h3>{NFT !== null ? `${NFT.seller}` : nftNotSelected()}</h3>
+          <h3>{NFT !== null ? `${NFT.seller}` : console.log("First Select an NFT")}</h3>
           <br />
           <h3>Previous Owners : {owners.length > 0 ? owners.map((owner) => {
             return(
