@@ -5,11 +5,11 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: NFT_Marketplace2
+    name: Contract
     network: goerli
     source:
       address: "0xDD0824353d5582eaB1D572a326b583c4565EEe13"
-      abi: NFT_Marketplace2
+      abi: Contract
       startBlock: 0
     mapping:
       kind: ethereum/events
@@ -20,8 +20,8 @@ dataSources:
         - BeaconUpgraded
         - Upgraded
       abis:
-        - name: NFT_Marketplace2
-          file: ./abis/NFT_Marketplace2.json
+        - name: Contract
+          file: ./abis/Contract.json
       eventHandlers:
         - event: AdminChanged(address,address)
           handler: handleAdminChanged
@@ -29,4 +29,4 @@ dataSources:
           handler: handleBeaconUpgraded
         - event: Upgraded(indexed address)
           handler: handleUpgraded
-      file: ./src/nft-marketplace-2.ts
+      file: ./src/contract.ts

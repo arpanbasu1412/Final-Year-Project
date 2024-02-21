@@ -8,9 +8,9 @@ import {
 } from "matchstick-as/assembly/index"
 import { Address } from "@graphprotocol/graph-ts"
 import { AdminChanged } from "../generated/schema"
-import { AdminChanged as AdminChangedEvent } from "../generated/NFT_Marketplace2/NFT_Marketplace2"
-import { handleAdminChanged } from "../src/nft-marketplace-2"
-import { createAdminChangedEvent } from "./nft-marketplace-2-utils"
+import { AdminChanged as AdminChangedEvent } from "../generated/Contract/Contract"
+import { handleAdminChanged } from "../src/contract"
+import { createAdminChangedEvent } from "./contract-utils"
 
 // Tests structure (matchstick-as >=0.5.0)
 // https://thegraph.com/docs/en/developer/matchstick/#tests-structure-0-5-0
