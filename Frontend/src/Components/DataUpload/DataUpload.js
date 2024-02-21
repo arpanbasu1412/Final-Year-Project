@@ -29,7 +29,7 @@ const DataUpload = (props) => {
           },
         });
         const ImgHash = `https://gateway.pinata.cloud/ipfs/${resFile.data.IpfsHash}`;
-        props.contract.createToken(ImgHash, e.target[1].value, {
+        props.contract.createToken(ImgHash, e.target[1].value, e.target[2].value, {
           value: ethers.utils.parseEther("0.0015"),
           gasLimit: 3000000,
         });
@@ -39,6 +39,7 @@ const DataUpload = (props) => {
         alert(error);
       }
     }
+    console.log(e.target[2].value);
   };
   const retrieveFile = (e) => {
     const data = e.target.files[0];
@@ -73,6 +74,10 @@ const DataUpload = (props) => {
           <div className="input-box address">
             <label>Enter the price :</label>
             <input type="text" placeholder="e.i. 1" required />
+          </div>
+          <div className="input-box address">
+            <label>Enter the about section of the NFT :</label>
+            <input type="text" placeholder="e.i. gaming" required />
           </div>
           <button>Submit</button>
         </form>

@@ -23,6 +23,7 @@ async function main() {
   });
   await nft.waitForDeployment();
   console.log("NFT Marketplace deployed address ", await nft.getAddress());
+  console.log("NFT Marketplace deployed address ", nft);
 }
 
 main()
@@ -31,3 +32,5 @@ main()
     console.error(error);
     process.exit(1);
   });
+
+  // 0xDD0824353d5582eaB1D572a326b583c4565EEe13

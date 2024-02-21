@@ -31,11 +31,13 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
         uint256 price;
         bool sold;
         string link;
+        string about;
     }
 
     event idMarketItemCreated(
         uint256 indexed tokenId,
-        address indexed seller,
+        address seller,
+        string indexed about,
         address owner,
         uint256 indexed price,
         bool sold,
@@ -75,11 +77,13 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
         return owners[tokenId];
     }
 
-
+    function getContractOwner() public view returns (address payable){
+        return owner;
+    }
 
     //To create unique ID for every NFT
 
-    function createToken(string memory tokenURI, uint256 price) public payable returns(uint256){
+    function createToken(string memory tokenURI, uint256 price, string memory aboutNFT) public payable returns(uint256){
         _tokenIds.increment();
 
         uint256 newTokenId = _tokenIds.current();
@@ -87,14 +91,14 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
         _mint(msg.sender, newTokenId);
         _setTokenURI(newTokenId, tokenURI);
 
-        createMarketItem(newTokenId, price, tokenURI);
+        createMarketItem(newTokenId, price, tokenURI, aboutNFT);
 
         return newTokenId;
     }
 
     //Create all the market items
 
-    function createMarketItem(uint256 tokenId, uint256 price, string memory tokenURI) private {
+    function createMarketItem(uint256 tokenId, uint256 price, string memory tokenURI, string memory aboutNFT) private {
         require(price > 0, 'Price must be at least 1');
         require(msg.value == listingPrice, 'Price must be equal to listing price');
 
@@ -104,14 +108,15 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
             payable(address(this)),
             price,
             false,
-            tokenURI
+            tokenURI,
+            aboutNFT
         );
 
         owners[tokenId].push(msg.sender);
 
         _transfer(msg.sender, address(this), tokenId);
 
-        emit idMarketItemCreated(tokenId, msg.sender, address(this), price, false, tokenURI);
+        emit idMarketItemCreated(tokenId, msg.sender, aboutNFT, address(this), price, false, tokenURI);
     }
 
     //Function For Resale Token. To resale the previously bought NFT

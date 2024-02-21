@@ -42,21 +42,21 @@ const App = () => {
   const [NFTs, setNFTs] = useState([]);
   const [NFT, setNFT] = useState(null);
 
-  const queryURL = "https://api.studio.thegraph.com/query/51943/upgradeable/version/latest";
-  const query = `{
-    idMarketItemCreateds {
-      link
-      owner
-      price
-      seller
-      sold
-      tokenId
-    }
-  }`
+  // const queryURL = "https://api.studio.thegraph.com/query/51943/upgradeable/version/latest";
+  // const query = `{
+  //   idMarketItemCreateds {
+  //     link
+  //     owner
+  //     price
+  //     seller
+  //     sold
+  //     tokenId
+  //   }
+  // }`
 
-  const client = createClient({
-    url: queryURL
-  })
+  // const client = createClient({
+  //   url: queryURL
+  // })
 
   const router = createBrowserRouter([
     {
@@ -96,7 +96,7 @@ const App = () => {
     const providers = async() => {
       if(provider){
         const signer = provider.getSigner();
-        let contractAddress = "0xf2f0E62B2F19A30782A1e6a1D666360a551a3B77";
+        let contractAddress = "0xDD0824353d5582eaB1D572a326b583c4565EEe13";
         const contracts = new ethers.Contract(
           contractAddress, NFT_Marketplace.abi, signer
         )
@@ -106,14 +106,14 @@ const App = () => {
       }
     }
 
-    const getData = async () => {
-      const {data} = await client.query(query).toPromise();
-      setNFTs(data.idMarketItemCreateds);
-    }
+    // const getData = async () => {
+    //   const {data} = await client.query(query).toPromise();
+    //   setNFTs(data.idMarketItemCreateds);
+    // }
 
     providers();
 
-    getData();
+    // getData();
 
     // console.log("NFT Id: ", NFT);
     
