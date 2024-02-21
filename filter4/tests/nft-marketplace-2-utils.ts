@@ -4,7 +4,7 @@ import {
   AdminChanged,
   BeaconUpgraded,
   Upgraded
-} from "../generated/Contract/Contract"
+} from "../generated/NFT_Marketplace2/NFT_Marketplace2"
 
 export function createAdminChangedEvent(
   previousAdmin: Address,

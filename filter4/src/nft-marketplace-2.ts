@@ -2,7 +2,7 @@ import {
   AdminChanged as AdminChangedEvent,
   BeaconUpgraded as BeaconUpgradedEvent,
   Upgraded as UpgradedEvent
-} from "../generated/Contract/Contract"
+} from "../generated/NFT_Marketplace2/NFT_Marketplace2"
 import { AdminChanged, BeaconUpgraded, Upgraded } from "../generated/schema"
 
 export function handleAdminChanged(event: AdminChangedEvent): void {
