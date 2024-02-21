@@ -7,24 +7,27 @@ import {
   afterAll
 } from "matchstick-as/assembly/index"
 import { Address } from "@graphprotocol/graph-ts"
-import { AdminChanged } from "../generated/schema"
-import { AdminChanged as AdminChangedEvent } from "../generated/NFT_Marketplace2/NFT_Marketplace2"
-import { handleAdminChanged } from "../src/nft-marketplace-2"
-import { createAdminChangedEvent } from "./nft-marketplace-2-utils"
+import { OwnershipTransferred } from "../generated/schema"
+import { OwnershipTransferred as OwnershipTransferredEvent } from "../generated/NFT_Marketplace2/NFT_Marketplace2"
+import { handleOwnershipTransferred } from "../src/nft-marketplace-2"
+import { createOwnershipTransferredEvent } from "./nft-marketplace-2-utils"
 
 // Tests structure (matchstick-as >=0.5.0)
 // https://thegraph.com/docs/en/developer/matchstick/#tests-structure-0-5-0
 
 describe("Describe entity assertions", () => {
   beforeAll(() => {
-    let previousAdmin = Address.fromString(
+    let previousOwner = Address.fromString(
       "0x0000000000000000000000000000000000000001"
     )
-    let newAdmin = Address.fromString(
+    let newOwner = Address.fromString(
       "0x0000000000000000000000000000000000000001"
     )
-    let newAdminChangedEvent = createAdminChangedEvent(previousAdmin, newAdmin)
-    handleAdminChanged(newAdminChangedEvent)
+    let newOwnershipTransferredEvent = createOwnershipTransferredEvent(
+      previousOwner,
+      newOwner
+    )
+    handleOwnershipTransferred(newOwnershipTransferredEvent)
   })
 
   afterAll(() => {
@@ -34,20 +37,20 @@ describe("Describe entity assertions", () => {
   // For more test scenarios, see:
   // https://thegraph.com/docs/en/developer/matchstick/#write-a-unit-test
 
-  test("AdminChanged created and stored", () => {
-    assert.entityCount("AdminChanged", 1)
+  test("OwnershipTransferred created and stored", () => {
+    assert.entityCount("OwnershipTransferred", 1)
 
     // 0xa16081f360e3847006db660bae1c6d1b2e17ec2a is the default address used in newMockEvent() function
     assert.fieldEquals(
-      "AdminChanged",
+      "OwnershipTransferred",
       "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
-      "previousAdmin",
+      "previousOwner",
       "0x0000000000000000000000000000000000000001"
     )
     assert.fieldEquals(
-      "AdminChanged",
+      "OwnershipTransferred",
       "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
-      "newAdmin",
+      "newOwner",
       "0x0000000000000000000000000000000000000001"
     )
 
