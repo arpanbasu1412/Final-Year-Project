@@ -8,25 +8,19 @@ dataSources:
     name: NFT_Marketplace2
     network: goerli
     source:
-      address: "0xDD0824353d5582eaB1D572a326b583c4565EEe13"
+      address: "0xFdeD8467cb929392a56f9891976B443F4c52475a"
       abi: NFT_Marketplace2
-      startBlock: 10571788
+      startBlock: 10571811
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - AdminChanged
-        - BeaconUpgraded
-        - Upgraded
+        - OwnershipTransferred
       abis:
         - name: NFT_Marketplace2
           file: ./abis/NFT_Marketplace2.json
       eventHandlers:
-        - event: AdminChanged(address,address)
-          handler: handleAdminChanged
-        - event: BeaconUpgraded(indexed address)
-          handler: handleBeaconUpgraded
-        - event: Upgraded(indexed address)
-          handler: handleUpgraded
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
       file: ./src/nft-marketplace-2.ts
