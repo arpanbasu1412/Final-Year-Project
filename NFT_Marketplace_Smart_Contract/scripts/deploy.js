@@ -14,15 +14,19 @@
 //   });
 
 const { ethers, upgrades } = require("hardhat");
+require("dotenv").config();
 
 async function main() {
+  // const gas = await ethers.provider.getGasPrice();
   const MyNFT = await ethers.getContractFactory("NFT_Marketplace");
   console.log("Deploying NFT Marketplace version 1 ...");
-  const nft = await upgrades.deployProxy(MyNFT, {
+  const nft = await upgrades.deployProxy(MyNFT, [1500000000000000], {
+    // gasPrice: gas,
     initializer: "initialize",
   });
   await nft.waitForDeployment();
-  console.log("NFT Marketplace deployed address ", await nft.getAddress());
+  // console.log("NFT Marketplace deployed address ", await nft.getAddress());
+  console.log("NFT Marketplace deployed address ", nft.address);
   console.log("NFT Marketplace deployed address ", nft);
 }
 

@@ -24,6 +24,17 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
 
     mapping(uint256 => address[]) private owners;
 
+    mapping(address => mapping(string => uint)) private recomendation;
+
+    mapping (address => MostViewed) private mostNFTS;
+
+    string[6] private genre;
+
+    struct MostViewed{
+        string about;
+        uint count;
+    }
+
     struct MarketItem {
         uint256 tokenId;
         address payable seller;
@@ -53,10 +64,11 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
     //     _disableInitializers();
     // }
 
-    function initialize() initializer public {
+    function initialize(uint listPrice) initializer public {
         __ERC721_init("NFT Metaverse Token", "MYNFT");
-        owner == payable(msg.sender);
-        listingPrice = 0.0015 ether;
+        owner = payable(msg.sender);
+        listingPrice = listPrice;
+        genre = ["gaming", "horror", "monkey", "anime", "art", "movie"];
     }
 
     //To update the listing price for NFT
@@ -77,8 +89,20 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
         return owners[tokenId];
     }
 
+    //To show what genre the customer ownes most
+
+    function getMaxNFTData(address visitor) public view returns (string memory) {
+        return mostNFTS[visitor].about;
+    }
+
+    //To show the actual owner of the contract
+
     function getContractOwner() public view returns (address payable){
         return owner;
+    }
+
+    function getGenre() public view returns(string[6] memory){
+        return genre;
     }
 
     //To create unique ID for every NFT
@@ -101,6 +125,7 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
     function createMarketItem(uint256 tokenId, uint256 price, string memory tokenURI, string memory aboutNFT) private {
         require(price > 0, 'Price must be at least 1');
         require(msg.value == listingPrice, 'Price must be equal to listing price');
+        require(checkIfAboutIsCorrect(string(aboutNFT)), "The genre is not correct");
 
         idMarketItem[tokenId] = MarketItem(
             tokenId,
@@ -131,6 +156,10 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
 
         _itemsSold.decrement();
 
+        recomendation[msg.sender][idMarketItem[tokenId].about] -= 1;
+
+        calculateHighestNFT(msg.sender);
+
         _transfer(msg.sender, address(this), tokenId);
     }
 
@@ -139,7 +168,9 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
     function createMarketSale(uint256 tokenId) public payable{
         uint256 price = idMarketItem[tokenId].price;
 
-        require(msg.value >= price, "Please submit the asking price in order to complete the transaction");
+        require(msg.value >= (price + listingPrice), "Please submit the asking price in order to complete the transaction");
+
+        payable(idMarketItem[tokenId].seller).transfer(msg.value);
 
         idMarketItem[tokenId].owner = payable(msg.sender);
         idMarketItem[tokenId].sold = true;
@@ -149,9 +180,11 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
 
         owners[tokenId].push(msg.sender);
 
-        _transfer(address(this), msg.sender, tokenId);
+        recomendation[msg.sender][idMarketItem[tokenId].about] += 1;
 
-        payable(idMarketItem[tokenId].seller).transfer((msg.value - listingPrice));
+        calculateHighestNFT(msg.sender);
+
+        _transfer(address(this), msg.sender, tokenId);
     }
 
     //Get the unsold NFT Data
@@ -226,5 +259,36 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
             }
         }
         return items;
+    }
+
+    //This function calculates the type of NFT that a customer ownes most
+
+    function calculateHighestNFT(address visitor) internal{
+        string[6] memory tempGenre = genre;
+        uint max = 0;
+        string memory maxGenre;
+        for(uint i = 0; i < tempGenre.length; i++){
+            uint temp = recomendation[visitor][tempGenre[i]];
+            if(temp > max){
+                max = temp;
+                maxGenre = tempGenre[i];
+            }
+        }
+        mostNFTS[visitor] = MostViewed(
+            maxGenre,
+            max
+        );
+    }
+
+    //This function checks if the customer gives the name of the genre correct
+
+    function checkIfAboutIsCorrect(string memory aboutNFT) internal view returns(bool){
+        string[6] memory tempGenre = genre;
+        for(uint i = 0; i < tempGenre.length; i++){
+            if(keccak256(abi.encodePacked(aboutNFT)) == keccak256(abi.encodePacked(tempGenre[i]))){
+                return true;
+            }
+        }
+        return false;
     }
 }

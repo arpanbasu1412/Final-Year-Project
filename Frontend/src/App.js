@@ -39,8 +39,9 @@ const App = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [contract, setContract] = useState(null);
   const [provider, setProvider] = useState(null);
-  const [NFTs, setNFTs] = useState([]);
+  // const [NFTs, setNFTs] = useState([]);
   const [NFT, setNFT] = useState(null);
+  const [maxOwned, setMaxOwned] = useState("");
 
   // const queryURL = "https://api.studio.thegraph.com/query/51943/upgradeable/version/latest";
   // const query = `{
@@ -71,7 +72,7 @@ const App = () => {
     },
     {
       path: "listing",
-      element: <NFTListing NFTs={NFTs} setNFT={setNFT} contract={contract} />
+      element: <NFTListing setNFT={setNFT} contract={contract} maxOwned={maxOwned} />
     },
     {
       path: "single",
@@ -87,7 +88,7 @@ const App = () => {
     },
     {
       path: "trending_page",
-      element: <TrendingPage NFTs={NFTs} setNFT={setNFT} contract={contract} />
+      element: <TrendingPage setNFT={setNFT} contract={contract} />
     },
   ]);
 
@@ -96,11 +97,13 @@ const App = () => {
     const providers = async() => {
       if(provider){
         const signer = provider.getSigner();
-        let contractAddress = "0xDD0824353d5582eaB1D572a326b583c4565EEe13";
+        let contractAddress = "0x856e20637c82CE631372b979266fDC07eb9BB7fa";
         const contracts = new ethers.Contract(
           contractAddress, NFT_Marketplace.abi, signer
-        )
+        );
+        const recomendation = await contracts.getMaxNFTData(accountAddress);
         setContract(contracts);
+        setMaxOwned(recomendation);
       }else{
         console.error("Connect Metamask");
       }
@@ -119,6 +122,12 @@ const App = () => {
     
     // console.log("haveMetamask:", haveMetamask,", accountAddress:", accountAddress, ", accountBalance:", accountBalance, ", isConnected:", isConnected, "Provider:", provider, "Contract:", contract);
   }, [haveMetamask, accountAddress, accountBalance, isConnected, provider]);
+
+  // const handleClick = async () => {
+  //   const recomendation = await contract.getMaxNFTData(accountAddress);
+  //   setMaxOwned(recomendation);
+  //   console.log(maxOwned);
+  // }
 
   return (
     <div>

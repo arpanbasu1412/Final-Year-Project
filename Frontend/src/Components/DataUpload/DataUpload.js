@@ -39,6 +39,7 @@ const DataUpload = (props) => {
         alert(error);
       }
     }
+    console.log(typeof(e.target[2].value));
     console.log(e.target[2].value);
   };
   const retrieveFile = (e) => {

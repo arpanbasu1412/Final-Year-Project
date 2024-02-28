@@ -2,6 +2,8 @@ import "./NFTListing.css";
 import Button from "../../common/Button/Button";
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from "react";
+import AsMentioned from "./Recomendations/AsMentioned";
+import NotMentioned from "./Recomendations/NotMentioned";
 
 const NFTListing = (props) => {
   // Hardcoded NFT data with photo URLs
@@ -54,24 +56,25 @@ const NFTListing = (props) => {
       }): <h1 className="absolute-center">You don't have any NFT, Buy now</h1>
       }
       </div>
-      <h2 className="heading">Unsold NFTs</h2>
-      <div className="nft-grid">
-      {NFTs.length > 0 && NFTs.map((nft) => {
-        if(!nft[4]){
-          return(
-            <div key={count} className="nft-card">
-              <img className="nft-single" src={nft[5]} alt={nft[2]} />
-              <p className='token-number'>NFT Number: {count++}</p>
-              <Button className="buying-price" btnType='PRIMARY' btnText='BUY' btnOnClick={() => {
-                props.setNFT(nft);
-                singleNFT("/single");
-              }} />
-            </div>
-          )
-        }
-      })
-      }
+      {props.maxOwned.length == 0 ? NFTs.map((nft) => {
+            if(!nft[4]){
+              return(
+                  <div key={count} className="nft-card">
+                      <img className="nft-single" src={nft[5]} alt={nft[2]} />
+                      <p className='token-number'>NFT Number: {count++}</p>
+                      <Button className="buying-price" btnType='PRIMARY' btnText='BUY' btnOnClick={() => {
+                              props.setNFT(nft);
+                              singleNFT("/single");
+                      }} />
+                  </div>
+              )
+          }
+      }) : 
+      <div>
+        <AsMentioned NFTs={NFTs} count={count} singleNFT={singleNFT} setNFT={props.setNFT} maxOwned={props.maxOwned} />
+        <NotMentioned NFTs={NFTs} count={count} singleNFT={singleNFT} setNFT={props.setNFT} maxOwned={props.maxOwned} />
       </div>
+      }
       <div className='backBtn'>
         <Button btnType='SECONDARY' btnText='HOME' btnOnClick={() => backToHome("/")} />
       </div>

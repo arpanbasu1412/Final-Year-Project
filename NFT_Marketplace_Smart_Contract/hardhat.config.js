@@ -4,15 +4,15 @@ require('@openzeppelin/hardhat-upgrades');
 require("@nomicfoundation/hardhat-ethers");
 
 const ALCHEMY_API_KEY = process.env.API_URL;
-const GOERLI_PRIVATE_KEY = process.env.PRIVATE_KEY;
+const SEPOLIA_PRIVATE_KEY = process.env.PRIVATE_KEY;
 
 module.exports = {
   solidity: "0.8.9",
   networks: {
     hardhat: {},
-    goerli: {
+    sepolia: {
       url: ALCHEMY_API_KEY,
-      accounts: [`0x${GOERLI_PRIVATE_KEY}`]
+      accounts: [`0x${SEPOLIA_PRIVATE_KEY}`]
     }
   }
 };
