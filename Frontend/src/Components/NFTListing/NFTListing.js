@@ -56,20 +56,26 @@ const NFTListing = (props) => {
       }): <h1 className="absolute-center">You don't have any NFT, Buy now</h1>
       }
       </div>
-      {props.maxOwned.length == 0 ? NFTs.map((nft) => {
-            if(!nft[4]){
-              return(
+      {props.maxOwned.length == 0 ? 
+        <div className="nft-listing absolute-center">
+          <h2 className="heading">Unsold NFTs</h2>
+          <div className="nft-grid"> 
+            {NFTs.map((nft) => {
+              if(!nft[4]){
+                return(
                   <div key={count} className="nft-card">
-                      <img className="nft-single" src={nft[5]} alt={nft[2]} />
-                      <p className='token-number'>NFT Number: {count++}</p>
-                      <Button className="buying-price" btnType='PRIMARY' btnText='BUY' btnOnClick={() => {
-                              props.setNFT(nft);
-                              singleNFT("/single");
-                      }} />
+                    <img className="nft-single" src={nft[5]} alt={nft[2]} />
+                    <p className='token-number'>NFT Number: {count++}</p>
+                    <Button className="buying-price" btnType='PRIMARY' btnText='BUY' btnOnClick={() => {
+                      props.setNFT(nft);
+                      singleNFT("/single");
+                    }} />
                   </div>
-              )
-          }
-      }) : 
+                )
+              }
+            })} 
+          </div>
+        </div>: 
       <div>
         <AsMentioned NFTs={NFTs} count={count} singleNFT={singleNFT} setNFT={props.setNFT} maxOwned={props.maxOwned} />
         <NotMentioned NFTs={NFTs} count={count} singleNFT={singleNFT} setNFT={props.setNFT} maxOwned={props.maxOwned} />
