@@ -3,10 +3,11 @@ import "./SingleNFTPage.css";
 import Button from '../../common/Button/Button';
 import { useNavigate } from 'react-router-dom';
 import { ethers } from 'ethers';
+import AsMentioned from '../NFTListing/Recomendations/AsMentioned';
 
 const SingleNFTPage = (props) => {
 
-  const {NFT, contract, accountBalance, accountAddress} = props;
+  const {NFTs, setNFT, maxOwned, NFT, contract, accountBalance} = props;
 
   const [owners, setOwners] = useState([]);
 
@@ -15,10 +16,11 @@ const SingleNFTPage = (props) => {
 
   useEffect(() => {
     const seeAllOwners = async () => {
-      if(contract){
-        setOwners(await contract.getAllOwners(NFT.tokenId));
-      }else{
-        alert("Connect metamask first");
+      try{
+        if(contract){
+          setOwners(await contract.getAllOwners(NFT.tokenId));
+        }
+      }catch{
         backToHome("/");
       }
     }
@@ -28,39 +30,42 @@ const SingleNFTPage = (props) => {
 
 
   const buyingNFT = async () => {
-    const cost = Number(NFT.price) + 0.0015;
-    const valueToSend = ethers.utils.parseEther(`${cost}`)
-    console.log(cost);
-    if(accountBalance > cost){
-      const result = await contract.createMarketSale(NFT.tokenId, {
-        value: valueToSend,
-        gasLimit: 3000000,
-      });
-      console.log(result);
-    }else{
-      alert("Not Enough Money")
+    try{
+      const cost = Number(NFT.price) + 0.0015;
+      const valueToSend = ethers.utils.parseEther(`${cost}`)
+      console.log(cost);
+      if(accountBalance > cost){
+        const result = await contract.createMarketSale(NFT.tokenId, {
+          value: valueToSend,
+          gasLimit: 3000000,
+        });
+        console.log(result);
+      }
+    }catch{
+      backToHome("/");
     }
   }
 
   const resellNFT = async (e) => {
-    // console.log(typeof(e.target[0].value));
-    e.preventDefault();
-    const cost = 0.0015;
-    const valueToSend = ethers.utils.parseEther(`${cost}`)
-    console.log(cost);
-    if(accountBalance > valueToSend){
-      const result = await contract.reSellToken(NFT.tokenId, e.target[0].value, {
-        value: valueToSend,
-        gasLimit: 3000000,
-      });
-      console.log(result);
-    }else{
-      alert("Not Enough Money")
+    try{
+      // console.log(typeof(e.target[0].value));
+      e.preventDefault();
+      const cost = 0.0015;
+      const valueToSend = ethers.utils.parseEther(`${cost}`)
+      console.log(cost);
+      if(accountBalance > valueToSend){
+        const result = await contract.reSellToken(NFT.tokenId, e.target[0].value, {
+          value: valueToSend,
+          gasLimit: 3000000,
+        });
+        console.log(result);
+      }
+    }catch{
+      backToHome("/");
     }
   }
 
   const nftNotSelected = () => {
-    alert("First select a NFT.");
     listingPage("/listing");
   }
 
@@ -103,8 +108,11 @@ const SingleNFTPage = (props) => {
             </form>}
         </div>
       </div>
+      <div>
+        <h2 className="heading">All the NFTs similer to that</h2>
+        <AsMentioned NFTs={NFTs} setNFT={setNFT} maxOwned={maxOwned}/>
+      </div>
       <div className="absolute-center">
-        <Button btnType='SECONDARY' btnText='HOME' btnOnClick={() => backToHome("/")} />
         <Button btnType='SECONDARY' btnText='Listing Page' btnOnClick={() => listingPage("/listing")} />
       </div>
     </div>

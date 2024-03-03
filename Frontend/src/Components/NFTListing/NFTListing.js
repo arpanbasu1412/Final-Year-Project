@@ -8,7 +8,7 @@ import NotMentioned from "./Recomendations/NotMentioned";
 const NFTListing = (props) => {
   // Hardcoded NFT data with photo URLs
 
-  const {NFTs, contract} = props;
+  const {NFTs, contract, setMaxOwned} = props;
 
   const singleNFT = useNavigate();
 
@@ -47,6 +47,7 @@ const NFTListing = (props) => {
               <img className="nft-single" src={nft[5]} alt={nft[2]} />
               <p className='token-number'>NFT Number: {count++}</p>
               <Button className="buying-price" btnType='PRIMARY' btnText='Resell' btnOnClick={() => {
+                setMaxOwned(nft[6]);
                 props.setNFT(nft);
                 singleNFT("/single");
               }} />
@@ -67,6 +68,7 @@ const NFTListing = (props) => {
                     <img className="nft-single" src={nft[5]} alt={nft[2]} />
                     <p className='token-number'>NFT Number: {count++}</p>
                     <Button className="buying-price" btnType='PRIMARY' btnText='BUY' btnOnClick={() => {
+                      setMaxOwned(nft[6]);
                       props.setNFT(nft);
                       singleNFT("/single");
                     }} />

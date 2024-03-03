@@ -83,7 +83,7 @@ const App = () => {
       element: (
         <div>
           <Navbar setMaxOwned={setMaxOwned} />
-          <NFTListing NFTs={NFTs} setNFT={setNFT} contract={contract} maxOwned={maxOwned} />
+          <NFTListing NFTs={NFTs} setNFT={setNFT} contract={contract} maxOwned={maxOwned} setMaxOwned={setMaxOwned}/>
         </div>
       )
     },
@@ -92,7 +92,7 @@ const App = () => {
       element: (
         <div>
           <Navbar setMaxOwned={setMaxOwned} />
-          <SingleNFT NFT={NFT} contract={contract} accountBalance={accountBalance} accountAddress={accountAddress} />
+          <SingleNFT NFTs={NFTs} setNFT={setNFT} maxOwned={maxOwned} NFT={NFT} contract={contract} accountBalance={accountBalance} accountAddress={accountAddress} />
         </div>
       )
     },
@@ -182,7 +182,7 @@ const App = () => {
           <AsMentioned NFTs={NFTs} setNFT={setNFT} maxOwned={maxOwned} />
         </div>
       )
-    },
+    }
   ]);
 
   useEffect(() => {
