@@ -10,6 +10,8 @@ function AsMentioned(props) {
 
     const singleNFT = useNavigate();
 
+    const backToHome = useNavigate();
+
     return (
         <div>
             <div className="nft-grid">
@@ -29,6 +31,9 @@ function AsMentioned(props) {
                 console.log(nft);
             })
             }
+            <div className='backBtn absolute-center'>
+                <Button btnType='SECONDARY' btnText='HOME' btnOnClick={() => backToHome("/")} />
+            </div>
             </div>
         </div>
     )
