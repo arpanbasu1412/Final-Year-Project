@@ -6,7 +6,6 @@ function NotMentioned(props) {
 
     return (
         <div>
-            <h2 className="heading">Other Unsold NFTs</h2>
             <div className="nft-grid">
             {NFTs.length > 0 && NFTs.map((nft) => {
                 if(!nft[4] && nft[6] != maxOwned){

@@ -23,6 +23,10 @@ import DataUpload from './Components/DataUpload/DataUpload.js'
 
 import TrendingPage from './Components/TrendingPage/TrendingPage.js';
 
+import AsMentioned from './Components/NFTListing/Recomendations/AsMentioned.js';
+
+import Navbar from './Components/NavBar/NavBar.js';
+
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 
 import NFT_Marketplace from '../src/artifacts/contracts/NFT_Marketplace.sol/NFT_Marketplace.json';
@@ -42,6 +46,7 @@ const App = () => {
   // const [NFTs, setNFTs] = useState([]);
   const [NFT, setNFT] = useState(null);
   const [maxOwned, setMaxOwned] = useState("");
+  const [NFTs, setNFTs] = useState([[]]);
 
   // const queryURL = "https://api.studio.thegraph.com/query/51943/upgradeable/version/latest";
   // const query = `{
@@ -63,32 +68,120 @@ const App = () => {
     {
       path: "/",
       element: (
-        <div className='max-width'>
-          <TopFoald />
-          <BrandsIntegration />
-          <TrendingNFTs />
+        <div>
+          <Navbar setMaxOwned={setMaxOwned} />
+          <div className='max-width'>
+            <TopFoald />
+            <BrandsIntegration />
+            <TrendingNFTs />
+          </div>
         </div>
       ),
     },
     {
       path: "listing",
-      element: <NFTListing setNFT={setNFT} contract={contract} maxOwned={maxOwned} />
+      element: (
+        <div>
+          <Navbar setMaxOwned={setMaxOwned} />
+          <NFTListing NFTs={NFTs} setNFT={setNFT} contract={contract} maxOwned={maxOwned} />
+        </div>
+      )
     },
     {
       path: "single",
-      element: <SingleNFT NFT={NFT} contract={contract} accountBalance={accountBalance} accountAddress={accountAddress} />
+      element: (
+        <div>
+          <Navbar setMaxOwned={setMaxOwned} />
+          <SingleNFT NFT={NFT} contract={contract} accountBalance={accountBalance} accountAddress={accountAddress} />
+        </div>
+      )
     },
     {
       path: "data",
-      element: <DataUpload accountAddress={accountAddress} accountBalance={accountBalance} contract={contract} />
+      element: (
+        <div>
+          <Navbar setMaxOwned={setMaxOwned} />
+          <DataUpload accountAddress={accountAddress} accountBalance={accountBalance} contract={contract} />
+        </div>
+      )
     },
     {
       path: "resell",
-      element: <Resell NFT={NFT} contract={contract} accountBalance={accountBalance} accountAddress={accountAddress}/>
+      element: (
+        <div>
+          <Navbar setMaxOwned={setMaxOwned} />
+          <Resell NFT={NFT} contract={contract} accountBalance={accountBalance} accountAddress={accountAddress}/>
+        </div>
+      )
     },
     {
       path: "trending_page",
-      element: <TrendingPage setNFT={setNFT} contract={contract} />
+      element: (
+        <div>
+          <Navbar setMaxOwned={setMaxOwned} />
+          <TrendingPage setNFT={setNFT} contract={contract} />
+        </div>
+      )
+    },
+    {
+      path: "gamingNFT",
+      element: (
+        <div>
+          <Navbar setMaxOwned={setMaxOwned} />
+          <h2 className="heading">Gaming NFTs</h2>
+          <AsMentioned NFTs={NFTs} setNFT={setNFT} maxOwned={maxOwned} />
+        </div>
+      )
+    },
+    {
+      path: "horrorNFT",
+      element: (
+        <div>
+          <Navbar setMaxOwned={setMaxOwned} />
+          <h2 className="heading">Horror NFTs</h2>
+          <AsMentioned NFTs={NFTs} setNFT={setNFT} maxOwned={maxOwned} />
+        </div>
+      )
+    },
+    {
+      path: "monkeyNFT",
+      element: (
+        <div>
+          <Navbar setMaxOwned={setMaxOwned} />
+          <h2 className="heading">Monkey NFTs</h2>
+          <AsMentioned NFTs={NFTs} setNFT={setNFT} maxOwned={maxOwned} />
+        </div>
+      )
+    },
+    {
+      path: "animeNFT",
+      element: (
+        <div>
+          <Navbar setMaxOwned={setMaxOwned} />
+          <h2 className="heading">Anime NFTs</h2>
+          <AsMentioned NFTs={NFTs} setNFT={setNFT} maxOwned={maxOwned} />
+        </div>
+      )
+    },
+    {
+      path: "artNFT",
+      element: (
+        <div>
+          <Navbar setMaxOwned={setMaxOwned} />
+          <h2 className="heading">Art NFTs</h2>
+          <AsMentioned NFTs={NFTs} setNFT={setNFT} maxOwned={maxOwned} />
+        </div>
+      )
+    },
+    {
+      path: "movieNFT",
+      element: (
+        <div>
+          <Navbar setMaxOwned={setMaxOwned} />
+          <h2 className="heading">Movie NFTs</h2>
+          <AsMentioned NFTs={NFTs} setNFT={setNFT} maxOwned={maxOwned} />
+        </div>
+      )
     },
   ]);
 
@@ -100,8 +193,10 @@ const App = () => {
         let contractAddress = "0x856e20637c82CE631372b979266fDC07eb9BB7fa";
         const contracts = new ethers.Contract(
           contractAddress, NFT_Marketplace.abi, signer
-        );
+        )
         const recomendation = await contracts.getMaxNFTData(accountAddress);
+        const nft = await contracts.fetchMarketItem();
+        setNFTs(nft);
         setContract(contracts);
         setMaxOwned(recomendation);
       }else{

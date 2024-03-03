@@ -28,7 +28,17 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
 
     mapping (address => MostViewed) private mostNFTS;
 
+    mapping (uint => mapping (address => uint)) public bids;
+
+    mapping (uint => mapping (uint => address)) public bidsAddresses;
+    
+    // address payable public highestBiddder;
+
     string[6] private genre;
+
+    // uint public highestPayableBid;
+
+    uint public bidInc;
 
     struct MostViewed{
         string about;
@@ -43,17 +53,22 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
         bool sold;
         string link;
         string about;
+        bool auctionState;
+        uint endTime;
+        address payable highestBiddder;
+        uint highestPayableBid;
+        uint bidCount;
     }
 
-    event idMarketItemCreated(
-        uint256 indexed tokenId,
-        address seller,
-        string indexed about,
-        address owner,
-        uint256 indexed price,
-        bool sold,
-        string link
-    );
+    // event idMarketItemCreated(
+    //     uint256 indexed tokenId,
+    //     address seller,
+    //     string indexed about,
+    //     address owner,
+    //     uint256 indexed price,
+    //     bool sold,
+    //     string link
+    // );
 
     modifier ownerOnly() {
         require(msg.sender == owner, "Only owner can change the listing price");
@@ -69,6 +84,7 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
         owner = payable(msg.sender);
         listingPrice = listPrice;
         genre = ["gaming", "horror", "monkey", "anime", "art", "movie"];
+        bidInc = 1000000000000000000;
     }
 
     //To update the listing price for NFT
@@ -134,14 +150,19 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
             price,
             false,
             tokenURI,
-            aboutNFT
+            aboutNFT,
+            false,
+            block.timestamp,
+            payable(address(0)),
+            0,
+            0
         );
 
         owners[tokenId].push(msg.sender);
 
         _transfer(msg.sender, address(this), tokenId);
 
-        emit idMarketItemCreated(tokenId, msg.sender, aboutNFT, address(this), price, false, tokenURI);
+        // emit idMarketItemCreated(tokenId, msg.sender, aboutNFT, address(this), price, false, tokenURI);
     }
 
     //Function For Resale Token. To resale the previously bought NFT
@@ -153,6 +174,7 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
         idMarketItem[tokenId].price = price;
         idMarketItem[tokenId].seller = payable(msg.sender);
         idMarketItem[tokenId].owner = payable(address(this));
+        idMarketItem[tokenId].auctionState = false;
 
         _itemsSold.decrement();
 
@@ -290,5 +312,90 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
             }
         }
         return false;
+    }
+
+    function EndAuc(uint tokenId) public{
+        require(block.timestamp > idMarketItem[tokenId].endTime, "Not ended");
+
+        idMarketItem[tokenId].auctionState = false;
+
+        finalizeBid(tokenId);
+
+        idMarketItem[tokenId].seller.transfer(idMarketItem[tokenId].highestPayableBid);
+
+        idMarketItem[tokenId].owner = payable(idMarketItem[tokenId].highestBiddder);
+
+        idMarketItem[tokenId].sold = true;
+
+        idMarketItem[tokenId].seller = payable(idMarketItem[tokenId].highestBiddder);
+
+        _itemsSold.increment();
+
+        owners[tokenId].push(idMarketItem[tokenId].highestBiddder);
+
+        recomendation[idMarketItem[tokenId].highestBiddder][idMarketItem[tokenId].about] += 1;
+
+        calculateHighestNFT(idMarketItem[tokenId].highestBiddder);
+
+        _transfer(address(this), idMarketItem[tokenId].highestBiddder, tokenId);
+    }
+
+    function min(uint a, uint b) pure private returns (uint){
+        if(a<=b){
+            return a;
+        }
+        return b;
+
+    }
+
+    function startAuction(uint tokenId) public {
+        require(idMarketItem[tokenId].seller == msg.sender && !idMarketItem[tokenId].sold, "You are not the owner");
+        idMarketItem[tokenId].auctionState = true;
+        idMarketItem[tokenId].endTime = block.timestamp + 86400;
+    }
+
+    function placeBid(uint tokenId) public payable {
+        require(idMarketItem[tokenId].auctionState == true && msg.sender != idMarketItem[tokenId].seller);
+        require(msg.value >= 1000000000000000000);
+
+        if(bids[tokenId][msg.sender] == 0){
+
+            idMarketItem[tokenId].bidCount++;
+
+            bidsAddresses[tokenId][idMarketItem[tokenId].bidCount] = msg.sender;
+
+        }
+
+        uint currentbid = bids[tokenId][msg.sender] + msg.value;
+
+        require(currentbid > idMarketItem[tokenId].highestPayableBid);
+
+        bids[tokenId][msg.sender] = currentbid;
+
+        if(currentbid < bids[tokenId][idMarketItem[tokenId].highestBiddder]){
+            idMarketItem[tokenId].highestPayableBid = min(currentbid + bidInc, bids[tokenId][idMarketItem[tokenId].highestBiddder]);
+        }else{
+            idMarketItem[tokenId].highestPayableBid = min(currentbid,bids[tokenId][idMarketItem[tokenId].highestBiddder]+bidInc);
+            idMarketItem[tokenId].highestBiddder = payable(msg.sender);
+        }
+    }
+
+    function finalizeBid(uint tokenId) public {
+        require(idMarketItem[tokenId].auctionState == false);
+        for(uint i = 1; i <= idMarketItem[tokenId].bidCount; i++){
+            address payable person;
+            uint value;
+            if(bidsAddresses[tokenId][i] == idMarketItem[tokenId].highestBiddder){
+                person = idMarketItem[tokenId].highestBiddder;
+                value = bids[tokenId][idMarketItem[tokenId].highestBiddder] - idMarketItem[tokenId].highestPayableBid;
+            }
+            else{
+                person = payable(bidsAddresses[tokenId][i]);
+                value = bids[tokenId][bidsAddresses[tokenId][i]];
+            }
+            bids[tokenId][bidsAddresses[tokenId][i]]=0;
+            person.transfer(value);
+        }
+
     }
 }

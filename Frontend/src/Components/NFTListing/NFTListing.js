@@ -8,21 +8,21 @@ import NotMentioned from "./Recomendations/NotMentioned";
 const NFTListing = (props) => {
   // Hardcoded NFT data with photo URLs
 
-  const {contract} = props;
+  const {NFTs, contract} = props;
 
   const singleNFT = useNavigate();
 
   const backToHome = useNavigate();
 
-  const [NFTs, setNFTs] = useState([[]]);
+  // const [NFTs, setNFTs] = useState([[]]);
   
   const [personalNFTs, setPersonalNFTs] = useState([[]]);
 
   useEffect(() => {
     const getData = async () => {
       if(contract){
-        const nft = await contract.fetchMarketItem();
-        setNFTs(nft);
+        // const nft = await contract.fetchMarketItem();
+        // setNFTs(nft);
         const personalNFT = await contract.fetchMyNFT();
         setPersonalNFTs(personalNFT);
       }else{
@@ -77,7 +77,9 @@ const NFTListing = (props) => {
           </div>
         </div>: 
       <div>
+        <h2 className="heading">Unsold NFTs As Your Preference</h2>
         <AsMentioned NFTs={NFTs} count={count} singleNFT={singleNFT} setNFT={props.setNFT} maxOwned={props.maxOwned} />
+        <h2 className="heading">Other Unsold NFTs</h2>
         <NotMentioned NFTs={NFTs} count={count} singleNFT={singleNFT} setNFT={props.setNFT} maxOwned={props.maxOwned} />
       </div>
       }

@@ -1,13 +1,17 @@
 import React from 'react';
 import Button from "../../../common/Button/Button";
+import { useNavigate } from 'react-router-dom';
 
 function AsMentioned(props) {
 
-    let {NFTs, count, singleNFT, maxOwned} = props;
+    let {NFTs, setNFT, maxOwned} = props;
+
+    let count = 1;
+
+    const singleNFT = useNavigate();
 
     return (
         <div>
-            <h2 className="heading">Unsold NFTs As Your Preference</h2>
             <div className="nft-grid">
             {NFTs.length > 0 && NFTs.map((nft) => {
                 if(!nft[4] && nft[6] == maxOwned){
@@ -16,7 +20,7 @@ function AsMentioned(props) {
                             <img className="nft-single" src={nft[5]} alt={nft[2]} />
                             <p className='token-number'>NFT Number: {count++}</p>
                             <Button className="buying-price" btnType='PRIMARY' btnText='BUY' btnOnClick={() => {
-                                    props.setNFT(nft);
+                                    setNFT(nft);
                                     singleNFT("/single");
                             }} />
                         </div>
