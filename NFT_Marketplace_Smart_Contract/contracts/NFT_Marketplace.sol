@@ -13,24 +13,28 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
     using Counters for Counters.Counter;
 
-    Counters.Counter private _tokenIds;
-    Counters.Counter private _itemsSold;
+    Counters.Counter public _tokenIds;
+    Counters.Counter public _itemsSold;
 
-    uint256 listingPrice;
+    uint256 private listingPrice;
+
+    uint sample;
 
     address payable owner;
 
     mapping(uint256 => MarketItem) public idMarketItem;
 
-    mapping(uint256 => address[]) private owners;
+    mapping(uint256 => address[]) public owners;
 
-    mapping(address => mapping(string => uint)) private recomendation;
+    mapping(address => mapping(string => uint)) public recomendation;
 
-    mapping (address => MostViewed) private mostNFTS;
+    mapping (address => string) private mostNFTS;
 
     mapping (uint => mapping (address => uint)) public bids;
 
     mapping (uint => mapping (uint => address)) public bidsAddresses;
+
+    mapping (uint => bool) public auctionHappend;
     
     // address payable public highestBiddder;
 
@@ -40,10 +44,10 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
 
     uint public bidInc;
 
-    struct MostViewed{
-        string about;
-        uint count;
-    }
+    // struct MostViewed{
+    //     string about;
+    //     uint count;
+    // }
 
     struct MarketItem {
         uint256 tokenId;
@@ -70,10 +74,10 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
     //     string link
     // );
 
-    modifier ownerOnly() {
-        require(msg.sender == owner, "Only owner can change the listing price");
-        _;
-    }
+    // modifier ownerOnly() {
+    //     require(msg.sender == owner, "Only owner can change the listing price");
+    //     _;
+    // }
 
     // constructor() {
     //     _disableInitializers();
@@ -89,15 +93,15 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
 
     //To update the listing price for NFT
 
-    function updateListingPrice(uint256 _listingPrice) public payable ownerOnly {
-        listingPrice = _listingPrice;
-    }
+    // function updateListingPrice(uint256 _listingPrice) public payable ownerOnly {
+    //     listingPrice = _listingPrice;
+    // }
 
     // To get the listing price for NFT
 
-    function getListingPrice() public view returns (uint256){
-        return listingPrice;
-    }
+    // function getListingPrice() public view returns (uint256){
+    //     return listingPrice;
+    // }
 
     //To get all the owners
 
@@ -108,22 +112,22 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
     //To show what genre the customer ownes most
 
     function getMaxNFTData(address visitor) public view returns (string memory) {
-        return mostNFTS[visitor].about;
+        return mostNFTS[visitor];
     }
 
     //To show the actual owner of the contract
 
-    function getContractOwner() public view returns (address payable){
-        return owner;
-    }
+    // function getContractOwner() public view returns (address payable){
+    //     return owner;
+    // }
 
-    function getGenre() public view returns(string[6] memory){
-        return genre;
-    }
+    // function getGenre() public view returns(string[6] memory){
+    //     return genre;
+    // }
 
     //To create unique ID for every NFT
 
-    function createToken(string memory tokenURI, uint256 price, string memory aboutNFT) public payable returns(uint256){
+    function createToken(string memory tokenURI, uint256 price, string memory aboutNFT) external payable returns(uint256){
         _tokenIds.increment();
 
         uint256 newTokenId = _tokenIds.current();
@@ -139,9 +143,7 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
     //Create all the market items
 
     function createMarketItem(uint256 tokenId, uint256 price, string memory tokenURI, string memory aboutNFT) private {
-        require(price > 0, 'Price must be at least 1');
-        require(msg.value == listingPrice, 'Price must be equal to listing price');
-        require(checkIfAboutIsCorrect(string(aboutNFT)), "The genre is not correct");
+        require(price > 0 && msg.value == listingPrice && checkIfAboutIsCorrect(string(aboutNFT)));
 
         idMarketItem[tokenId] = MarketItem(
             tokenId,
@@ -168,8 +170,7 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
     //Function For Resale Token. To resale the previously bought NFT
 
     function reSellToken(uint256 tokenId, uint256 price) public payable{
-        require(idMarketItem[tokenId].owner == msg.sender, "Only owner can sell this");
-        require(msg.value == listingPrice, "Price must be equal to listing price");
+        require(idMarketItem[tokenId].owner == msg.sender && msg.value == listingPrice);
         idMarketItem[tokenId].sold = false;
         idMarketItem[tokenId].price = price;
         idMarketItem[tokenId].seller = payable(msg.sender);
@@ -190,23 +191,44 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
     function createMarketSale(uint256 tokenId) public payable{
         uint256 price = idMarketItem[tokenId].price;
 
-        require(msg.value >= (price + listingPrice), "Please submit the asking price in order to complete the transaction");
+        require(msg.value == (price + listingPrice));
 
-        payable(idMarketItem[tokenId].seller).transfer(msg.value);
+        // idMarketItem[tokenId].seller.transfer(msg.value);
 
-        idMarketItem[tokenId].owner = payable(msg.sender);
+        // idMarketItem[tokenId].owner = payable(msg.sender);
+        // idMarketItem[tokenId].sold = true;
+        // idMarketItem[tokenId].seller = payable(msg.sender);
+
+        // _itemsSold.increment();
+
+        // owners[tokenId].push(msg.sender);
+
+        // recomendation[msg.sender][idMarketItem[tokenId].about] += 1;
+
+        // calculateHighestNFT(msg.sender);
+
+        // _transfer(address(this), msg.sender, tokenId);
+
+        buyNFT(tokenId, payable(msg.sender), price);
+    }
+
+    function buyNFT(uint tokenId, address payable newOwner, uint value) public {
+
+        idMarketItem[tokenId].seller.transfer(value);
+
+        idMarketItem[tokenId].owner = newOwner;
         idMarketItem[tokenId].sold = true;
-        idMarketItem[tokenId].seller = payable(msg.sender);
+        idMarketItem[tokenId].seller = newOwner;
 
         _itemsSold.increment();
 
-        owners[tokenId].push(msg.sender);
+        owners[tokenId].push(newOwner);
 
-        recomendation[msg.sender][idMarketItem[tokenId].about] += 1;
+        recomendation[newOwner][idMarketItem[tokenId].about] += 1;
 
-        calculateHighestNFT(msg.sender);
+        calculateHighestNFT(newOwner);
 
-        _transfer(address(this), msg.sender, tokenId);
+        _transfer(address(this), newOwner, tokenId);
     }
 
     //Get the unsold NFT Data
@@ -258,30 +280,30 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
 
     //Single userItems
 
-    function fetchItemsListed() public view returns(MarketItem[] memory){
-        uint256 totalCount = _tokenIds.current();
-        uint256 itemCount = 0;
-        uint256 currentIndex = 0;
+    // function fetchItemsListed() public view returns(MarketItem[] memory){
+    //     uint256 totalCount = _tokenIds.current();
+    //     uint256 itemCount = 0;
+    //     uint256 currentIndex = 0;
 
-        for(uint256 i = 0; i < totalCount; i++){
-            if(idMarketItem[i + 1].seller == msg.sender){
-                itemCount += 1;
-            }
-        }
+    //     for(uint256 i = 0; i < totalCount; i++){
+    //         if(idMarketItem[i + 1].seller == msg.sender){
+    //             itemCount += 1;
+    //         }
+    //     }
 
-        MarketItem[] memory items = new MarketItem[](itemCount);
+    //     MarketItem[] memory items = new MarketItem[](itemCount);
 
-        for(uint256 i = 0; i < totalCount; i++){
-            if(idMarketItem[i + 1].seller == msg.sender){
-                uint256 currentId = i + 1;
+    //     for(uint256 i = 0; i < totalCount; i++){
+    //         if(idMarketItem[i + 1].seller == msg.sender){
+    //             uint256 currentId = i + 1;
 
-                MarketItem storage currentItem = idMarketItem[currentId];
-                 items[currentIndex] = currentItem;
-                 currentIndex += 1;
-            }
-        }
-        return items;
-    }
+    //             MarketItem storage currentItem = idMarketItem[currentId];
+    //              items[currentIndex] = currentItem;
+    //              currentIndex += 1;
+    //         }
+    //     }
+    //     return items;
+    // }
 
     //This function calculates the type of NFT that a customer ownes most
 
@@ -296,15 +318,12 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
                 maxGenre = tempGenre[i];
             }
         }
-        mostNFTS[visitor] = MostViewed(
-            maxGenre,
-            max
-        );
+        mostNFTS[visitor] = maxGenre;
     }
 
     //This function checks if the customer gives the name of the genre correct
 
-    function checkIfAboutIsCorrect(string memory aboutNFT) internal view returns(bool){
+    function checkIfAboutIsCorrect(string memory aboutNFT) private view returns(bool){
         string[6] memory tempGenre = genre;
         for(uint i = 0; i < tempGenre.length; i++){
             if(keccak256(abi.encodePacked(aboutNFT)) == keccak256(abi.encodePacked(tempGenre[i]))){
@@ -315,29 +334,34 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
     }
 
     function EndAuc(uint tokenId) public{
-        require(block.timestamp > idMarketItem[tokenId].endTime, "Not ended");
+
+        // address payable newOwner = idMarketItem[tokenId].highestBiddder;
+        // uint price = idMarketItem[tokenId].highestPayableBid;
+
+        require(block.timestamp > idMarketItem[tokenId].endTime && msg.sender == idMarketItem[tokenId].seller);
 
         idMarketItem[tokenId].auctionState = false;
 
         finalizeBid(tokenId);
 
-        idMarketItem[tokenId].seller.transfer(idMarketItem[tokenId].highestPayableBid);
+        // idMarketItem[tokenId].seller.transfer(idMarketItem[tokenId].highestPayableBid);
 
-        idMarketItem[tokenId].owner = payable(idMarketItem[tokenId].highestBiddder);
+        // idMarketItem[tokenId].owner = payable(idMarketItem[tokenId].highestBiddder);
 
-        idMarketItem[tokenId].sold = true;
+        // idMarketItem[tokenId].sold = true;
 
-        idMarketItem[tokenId].seller = payable(idMarketItem[tokenId].highestBiddder);
+        // idMarketItem[tokenId].seller = payable(idMarketItem[tokenId].highestBiddder);
 
-        _itemsSold.increment();
+        // _itemsSold.increment();
 
-        owners[tokenId].push(idMarketItem[tokenId].highestBiddder);
+        // owners[tokenId].push(idMarketItem[tokenId].highestBiddder);
 
-        recomendation[idMarketItem[tokenId].highestBiddder][idMarketItem[tokenId].about] += 1;
+        // recomendation[idMarketItem[tokenId].highestBiddder][idMarketItem[tokenId].about] += 1;
 
-        calculateHighestNFT(idMarketItem[tokenId].highestBiddder);
+        // calculateHighestNFT(idMarketItem[tokenId].highestBiddder);
 
-        _transfer(address(this), idMarketItem[tokenId].highestBiddder, tokenId);
+        // _transfer(address(this), idMarketItem[tokenId].highestBiddder, tokenId);
+        buyNFT(tokenId, idMarketItem[tokenId].highestBiddder, idMarketItem[tokenId].highestPayableBid);
     }
 
     function min(uint a, uint b) pure private returns (uint){
@@ -349,14 +373,15 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
     }
 
     function startAuction(uint tokenId) public {
-        require(idMarketItem[tokenId].seller == msg.sender && !idMarketItem[tokenId].sold, "You are not the owner");
+        require(idMarketItem[tokenId].seller == msg.sender && !idMarketItem[tokenId].sold);
         idMarketItem[tokenId].auctionState = true;
-        idMarketItem[tokenId].endTime = block.timestamp + 86400;
+        idMarketItem[tokenId].endTime = block.timestamp + 120;
+        auctionHappend[tokenId] = true;
     }
 
     function placeBid(uint tokenId) public payable {
-        require(idMarketItem[tokenId].auctionState == true && msg.sender != idMarketItem[tokenId].seller);
-        require(msg.value >= 1000000000000000000);
+        uint currentbid = bids[tokenId][msg.sender] + msg.value;
+        require(currentbid > idMarketItem[tokenId].highestPayableBid && block.timestamp <= idMarketItem[tokenId].endTime && msg.sender != idMarketItem[tokenId].seller && msg.value >= 1000000000000000000);
 
         if(bids[tokenId][msg.sender] == 0){
 
@@ -365,10 +390,6 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
             bidsAddresses[tokenId][idMarketItem[tokenId].bidCount] = msg.sender;
 
         }
-
-        uint currentbid = bids[tokenId][msg.sender] + msg.value;
-
-        require(currentbid > idMarketItem[tokenId].highestPayableBid);
 
         bids[tokenId][msg.sender] = currentbid;
 
@@ -381,13 +402,13 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
     }
 
     function finalizeBid(uint tokenId) public {
-        require(idMarketItem[tokenId].auctionState == false);
+        require(!idMarketItem[tokenId].auctionState);
+        address payable person;
+        uint value;
         for(uint i = 1; i <= idMarketItem[tokenId].bidCount; i++){
-            address payable person;
-            uint value;
             if(bidsAddresses[tokenId][i] == idMarketItem[tokenId].highestBiddder){
                 person = idMarketItem[tokenId].highestBiddder;
-                value = bids[tokenId][idMarketItem[tokenId].highestBiddder] - idMarketItem[tokenId].highestPayableBid;
+                value = (bids[tokenId][idMarketItem[tokenId].highestBiddder] - idMarketItem[tokenId].highestPayableBid) - 1500000000000000;
             }
             else{
                 person = payable(bidsAddresses[tokenId][i]);
@@ -396,6 +417,6 @@ contract NFT_Marketplace is Initializable, ERC721URIStorageUpgradeable {
             bids[tokenId][bidsAddresses[tokenId][i]]=0;
             person.transfer(value);
         }
-
     }
+
 }

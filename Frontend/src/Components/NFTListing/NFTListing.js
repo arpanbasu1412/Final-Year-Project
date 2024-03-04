@@ -47,8 +47,8 @@ const NFTListing = (props) => {
               <img className="nft-single" src={nft[5]} alt={nft[2]} />
               <p className='token-number'>NFT Number: {count++}</p>
               <Button className="buying-price" btnType='PRIMARY' btnText='Resell' btnOnClick={() => {
-                setMaxOwned(nft[6]);
                 props.setNFT(nft);
+                setMaxOwned(nft[6]);
                 singleNFT("/single");
               }} />
             </div>
@@ -68,8 +68,8 @@ const NFTListing = (props) => {
                     <img className="nft-single" src={nft[5]} alt={nft[2]} />
                     <p className='token-number'>NFT Number: {count++}</p>
                     <Button className="buying-price" btnType='PRIMARY' btnText='BUY' btnOnClick={() => {
-                      setMaxOwned(nft[6]);
                       props.setNFT(nft);
+                      setMaxOwned(nft[6]);
                       singleNFT("/single");
                     }} />
                   </div>
