@@ -27,13 +27,15 @@ import AsMentioned from './Components/NFTListing/Recomendations/AsMentioned.js';
 
 import Navbar from './Components/NavBar/NavBar.js';
 
+import Auction from './Components/AuctionPage/Auction.js';
+
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 
 import NFT_Marketplace from '../src/artifacts/contracts/NFT_Marketplace.sol/NFT_Marketplace.json';
 
 import { ethers } from 'ethers';
 
-import {createClient} from "urql";
+// import {createClient} from "urql";
 
 const App = () => {
 
@@ -182,6 +184,16 @@ const App = () => {
           <AsMentioned NFTs={NFTs} setNFT={setNFT} maxOwned={maxOwned} />
         </div>
       )
+    },
+    {
+      path: "auctionPage",
+      element: (
+        <div>
+          <Navbar setMaxOwned={setMaxOwned} />
+          <h2 className="heading">Auction Page</h2>
+          <Auction NFTs={NFTs} setNFT={setNFT} />
+        </div>
+      )
     }
   ]);
 
@@ -190,7 +202,7 @@ const App = () => {
     const providers = async() => {
       if(provider){
         const signer = provider.getSigner();
-        let contractAddress = "0x856e20637c82CE631372b979266fDC07eb9BB7fa";
+        let contractAddress = "0x98F491E939417b7A9df4c9f1Dd4443c3C72dEB61";
         const contracts = new ethers.Contract(
           contractAddress, NFT_Marketplace.abi, signer
         )
@@ -216,7 +228,7 @@ const App = () => {
     // console.log("NFT Id: ", NFT);
     
     // console.log("haveMetamask:", haveMetamask,", accountAddress:", accountAddress, ", accountBalance:", accountBalance, ", isConnected:", isConnected, "Provider:", provider, "Contract:", contract);
-  }, [haveMetamask, accountAddress, accountBalance, isConnected, provider]);
+  }, [haveMetamask, accountAddress, accountBalance, isConnected, provider, NFTs]);
 
   // const handleClick = async () => {
   //   const recomendation = await contract.getMaxNFTData(accountAddress);

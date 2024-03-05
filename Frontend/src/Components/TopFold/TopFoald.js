@@ -16,7 +16,7 @@ const TopFoald = () => {
           Discover collect, & sell{" "} <span className='heading-gradient'>Extraordinary</span> NFTs
         </div>
         <div className='tf-decsription'>
-          Please make sure that you are buying and sellinf the most trending NFTs out there. Welcome to my channel Developer's Sayak
+        Please make sure that you are buying and selling the most trending NFTs out there. Welcome to NFT MarketPlace using Blockchain Technology...
         </div>
         <div className='tf-left-btns'>
           <Button btnType='PRIMARY' btnText='EXPLORE' btnOnClick={() => exploreNFT("/listing")} />

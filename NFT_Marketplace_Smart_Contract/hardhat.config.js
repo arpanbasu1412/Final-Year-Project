@@ -2,6 +2,7 @@ require("@nomicfoundation/hardhat-toolbox");
 require("dotenv").config();
 require('@openzeppelin/hardhat-upgrades');
 require("@nomicfoundation/hardhat-ethers");
+require('hardhat-contract-sizer');
 
 const ALCHEMY_API_KEY = process.env.API_URL;
 const SEPOLIA_PRIVATE_KEY = process.env.PRIVATE_KEY;

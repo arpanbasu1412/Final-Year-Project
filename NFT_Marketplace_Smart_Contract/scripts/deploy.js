@@ -36,5 +36,3 @@ main()
     console.error(error);
     process.exit(1);
   });
-
-  // 0xDD0824353d5582eaB1D572a326b583c4565EEe13

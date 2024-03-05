@@ -30,7 +30,7 @@ const NFTListing = (props) => {
       }
     }
     getData();
-  }, [])
+  }, [backToHome, contract])
 
   let count = 1;
 
@@ -57,7 +57,7 @@ const NFTListing = (props) => {
       }): <h1 className="absolute-center">You don't have any NFT, Buy now</h1>
       }
       </div>
-      {props.maxOwned.length == 0 ? 
+      {props.maxOwned.length === 0 ? 
         <div className="nft-listing absolute-center">
           <h2 className="heading">Unsold NFTs</h2>
           <div className="nft-grid"> 

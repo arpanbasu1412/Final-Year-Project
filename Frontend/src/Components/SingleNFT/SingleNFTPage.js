@@ -25,7 +25,7 @@ const SingleNFTPage = (props) => {
       }
     }
     seeAllOwners();
-  },[])
+  },[NFT.tokenId, backToHome, contract])
 
 
 
@@ -53,13 +53,13 @@ const SingleNFTPage = (props) => {
       const cost = 0.0015;
       const valueToSend = ethers.utils.parseEther(`${cost}`)
       console.log(cost);
-      if(accountBalance > valueToSend){
+      // if(accountBalance > valueToSend){
         const result = await contract.reSellToken(NFT.tokenId, e.target[0].value, {
           value: valueToSend,
           gasLimit: 3000000,
         });
         console.log(result);
-      }
+      // }
     }catch{
       backToHome("/");
     }
@@ -75,7 +75,7 @@ const SingleNFTPage = (props) => {
       <div className="container">
         <div className="right-box">
           <div className="main-image-box">
-            <img src={NFT !== null ? `${NFT.link}` : nftNotSelected()} id="mainImage" className="main-image" />
+            <img src={NFT !== null ? `${NFT.link}` : nftNotSelected()} id="mainImage" className="main-image" alt="img" />
           </div>
         </div>
         <div className="details-box">
