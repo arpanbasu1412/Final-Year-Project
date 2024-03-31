@@ -228,7 +228,7 @@ const App = () => {
     // console.log("NFT Id: ", NFT);
     
     // console.log("haveMetamask:", haveMetamask,", accountAddress:", accountAddress, ", accountBalance:", accountBalance, ", isConnected:", isConnected, "Provider:", provider, "Contract:", contract);
-  }, [haveMetamask, accountAddress, accountBalance, isConnected, provider, NFTs]);
+  }, [haveMetamask, accountAddress, accountBalance, isConnected, provider]);
 
   // const handleClick = async () => {
   //   const recomendation = await contract.getMaxNFTData(accountAddress);
