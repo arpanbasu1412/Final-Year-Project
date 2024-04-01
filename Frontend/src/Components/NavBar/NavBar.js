@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './NavBar.css'
 import 'bootstrap/dist/css/bootstrap.css';
 import Dropdown from 'react-bootstrap/Dropdown';
-
+import Button from '../../common/Button/Button'
 
 
 const Navbar = (props) => {
@@ -14,9 +14,12 @@ const Navbar = (props) => {
 
   const gamingNFT = useNavigate();
 
+  const auctionPage = useNavigate();
+
   const { setMaxOwned } = props;
 
   return (
+    <>
     <Dropdown>
       <Dropdown.Toggle variant="success" id="dropdown-basic">
         Category
@@ -82,6 +85,8 @@ const Navbar = (props) => {
 
       </Dropdown.Menu>
     </Dropdown>
+    <Button btnType='PRIMARY' btnText='Auction Page' btnOnClick={() => auctionPage("/auctionPage")} />
+    </>
   );
 };
 

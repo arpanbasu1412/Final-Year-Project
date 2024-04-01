@@ -64,6 +64,7 @@ const DataUpload = (props) => {
             <label>Account Balance : </label>
             <label>{props.accountBalance}</label>
           </div>
+          
           <div className="column">
             <div className="input-box">
               <label>Upload File</label>

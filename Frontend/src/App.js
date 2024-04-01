@@ -190,8 +190,7 @@ const App = () => {
       element: (
         <div>
           <Navbar setMaxOwned={setMaxOwned} />
-          <h2 className="heading">Auction Page</h2>
-          <Auction NFTs={NFTs} setNFT={setNFT} />
+          <Auction NFTs={NFTs} setNFT={setNFT} contract={contract} maxOwned={maxOwned} setMaxOwned={setMaxOwned}/>
         </div>
       )
     }

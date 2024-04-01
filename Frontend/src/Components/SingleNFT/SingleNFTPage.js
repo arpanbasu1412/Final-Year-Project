@@ -7,7 +7,7 @@ import AsMentioned from '../NFTListing/Recomendations/AsMentioned';
 
 const SingleNFTPage = (props) => {
 
-  const {NFTs, setNFT, maxOwned, NFT, contract, accountBalance} = props;
+  const { NFTs, setNFT, maxOwned, NFT, contract, accountBalance } = props;
 
   const [owners, setOwners] = useState([]);
 
@@ -16,51 +16,51 @@ const SingleNFTPage = (props) => {
 
   useEffect(() => {
     const seeAllOwners = async () => {
-      try{
-        if(contract){
+      try {
+        if (contract) {
           setOwners(await contract.getAllOwners(NFT.tokenId));
         }
-      }catch{
+      } catch {
         backToHome("/");
       }
     }
     seeAllOwners();
-  },[NFT.tokenId, backToHome, contract])
+  }, [NFT.tokenId, backToHome, contract])
 
 
 
   const buyingNFT = async () => {
-    try{
+    try {
       const cost = Number(NFT.price) + 0.0015;
       const valueToSend = ethers.utils.parseEther(`${cost}`)
       console.log(cost);
-      if(accountBalance > cost){
+      if (accountBalance > cost) {
         const result = await contract.createMarketSale(NFT.tokenId, {
           value: valueToSend,
           gasLimit: 3000000,
         });
         console.log(result);
       }
-    }catch{
+    } catch {
       backToHome("/");
     }
   }
 
   const resellNFT = async (e) => {
-    try{
+    try {
       // console.log(typeof(e.target[0].value));
       e.preventDefault();
       const cost = 0.0015;
       const valueToSend = ethers.utils.parseEther(`${cost}`)
       console.log(cost);
       // if(accountBalance > valueToSend){
-        const result = await contract.reSellToken(NFT.tokenId, e.target[0].value, {
-          value: valueToSend,
-          gasLimit: 3000000,
-        });
-        console.log(result);
+      const result = await contract.reSellToken(NFT.tokenId, e.target[0].value, {
+        value: valueToSend,
+        gasLimit: 3000000,
+      });
+      console.log(result);
       // }
-    }catch{
+    } catch {
       backToHome("/");
     }
   }
@@ -88,29 +88,38 @@ const SingleNFTPage = (props) => {
           <h3>{NFT !== null ? `${NFT.seller}` : console.log("First Select an NFT")}</h3>
           <br />
           <h3>Previous Owners : {owners.length > 0 ? owners.map((owner) => {
-            return(
+            return (
               <div>
-                <br/>
+                <br />
                 <h3>{owner}</h3>
                 <br />
               </div>
             )
           }) : `No owners`}</h3>
-          {!NFT[4] ? <button onClick={buyingNFT}>Buy</button> : 
-          <form action="#" onSubmit={resellNFT}>
-            <br />
-            <div>
-              <h3>Enter the price :</h3>
+          <h2>
+            <label>End Auction after : </label>
+            <label>12 am</label>
+          </h2>
+          <h2>
+            <label>Highest Bid Amount : </label>
+            <label>5 ETH</label>
+          </h2>
+          {!NFT[4] ? <button type="button" className="btn btn-success" onClick={buyingNFT}>Buy</button> :
+            <form action="#" onSubmit={resellNFT}>
               <br />
-              <input className="price" type="text" placeholder="e.i. 1" required />
-            </div>
+              <div>
+                <h3>Enter the price :</h3>
+                <br />
+                <input className="price" type="text" placeholder="e.i. 1" required />
+              </div>
               <button>Resell</button>
             </form>}
+            <button type="button" className="btn btn-success">Stop Auction</button>
         </div>
       </div>
       <div>
         <h2 className="heading">All the NFTs similer to that</h2>
-        <AsMentioned NFTs={NFTs} setNFT={setNFT} maxOwned={maxOwned}/>
+        <AsMentioned NFTs={NFTs} setNFT={setNFT} maxOwned={maxOwned} />
       </div>
       <div className="absolute-center">
         <Button btnType='SECONDARY' btnText='Listing Page' btnOnClick={() => listingPage("/listing")} />
